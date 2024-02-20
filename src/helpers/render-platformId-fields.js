@@ -22,6 +22,7 @@ const renderPlatformIdField = ({ input, type, placeholder, componentClass, rows,
                         bsStyle="primary"
                         className="dynamic-input-group-btn"
                         type="button"
+                        hidden="true"
                         onClick={onAdd}
                     >
                         <Glyphicon glyph="plus"/>
@@ -33,6 +34,7 @@ const renderPlatformIdField = ({ input, type, placeholder, componentClass, rows,
                         className="dynamic-input-group-btn"
                         style={{marginLeft: "0.25em", borderRadius: "4px"}}
                         type="button"
+                        hidden="true"
                         onClick={onDelete}
                     >
                         <Glyphicon glyph="minus"/>

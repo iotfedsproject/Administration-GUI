@@ -99,38 +99,27 @@ class PendingJoinRequestList extends Component {
                 _.map(availablePendingJoinRequest, (available) => {
                     return <CollapsiblePendingJoinRequestsPanel
                         key={available.federationId}
-                        federationName={available.federationId}
 
-                        handledDate= {available.handledDate}
+                        federationName = {available.federationId}
+                        handledDate    = {available.handledDate}
+
                         requestDate= {available.requestDate}
                         votingState= {available.status}
                         voteAction = {available.voteAction}
                         votingId   = {available.votingId}
-                        comparator = {available.slaConstraints[0].comparator}
-                        duration   = {available.slaConstraints[0].duration}
-                        metric     = {available.slaConstraints[0].metric}
-                        resourceType = {available.slaConstraints[0].resourceType}
-                        threshold    = {available.slaConstraints[0].threshold}
-                        authority    = {available.requestingUser.authorities[0].authority}
+                        requestingUser   = {available.requestingUser}
+                        username         = {available.username}
 
                         details={"Voting details"+"\n"+
                         "------------------------------------"    + "\n" +
                         "Federation Id: "+ available.federationId + "\n" +
                         "Request Date: " + available.requestDate  + "\n" +
                         "Handle date: "  + available.handledDate  + "\n" +
+                        "Requesting User: " + available.requestingUser  + "\n" +
+                        "User Name: "       + available.username  + "\n" +
                         "Voting Id: "    + available.votingId     + "\n" +
                         "Vote Action: "  + available.voteAction   + "\n" +
-                        "Authority: "    + available.requestingUser.authorities[0].authority + "\n"+
-
-                        "Voting state: " + available.status + "\n" + "\n"+
-                        "SLA Constrains" + "\n" +
-                        "------------------------" + "\n" +
-                        "Comparator: "    + available.slaConstraints[0].comparator + "\n" +
-                        "Duration: "      + available.slaConstraints[0].duration + "\n" +
-                        "Metric: "        + available.slaConstraints[0].metric + "\n" +
-                        "Resource type: " + available.slaConstraints[0].resourceType + "\n" +
-                        "Threshold: "     + available.slaConstraints[0].threshold+ "\n"
-
+                        "Voting state: " + available.status + "\n" + "\n"
                        }
 
                         showButton = {"false"}

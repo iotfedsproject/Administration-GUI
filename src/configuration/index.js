@@ -114,11 +114,11 @@ export const APPROVAL_PERCENT = [
 export const VOTE_RULES_BASE = [
     {
         label : "Board",
-        value : "board"
+        value : "Board"
     },
     {
          label : "Voters",
-         value : "voters"
+         value : "Voters"
     }
 ];
 
@@ -126,11 +126,11 @@ export const VOTE_RULES_BASE = [
 export const UNDER_PERFORMANCE = [
     {
         label : "None",
-        value : "none"
+        value : "None"
     },
     {
          label : "RequestRemove",
-         value : "requestRemove"
+         value : "RequestRemove"
     }
 ];
 
@@ -153,15 +153,15 @@ export const CHARGE_POLICY = [
 export const FED_PRODUCT = [
     {
         label : "Packaging",
-        value : "packaging"
+        value : "Packaging"
     },
     {
         label : "Matching",
-        value : "matching"
+        value : "Matching"
     },
     {
        label : "Both",
-       value : "both"
+       value : "Both"
     }
 ];
 
@@ -169,15 +169,15 @@ export const FED_PRODUCT = [
 export const PROFIT_POLICY = [
     {
         label : "PerSource",
-        value : "perSource"
+        value : "PerSource"
     },
     {
         label : "Contribution",
-        value : "contribution"
+        value : "Contribution"
     },
     {
        label : "Both",
-       value : "both"
+       value : "Both"
     }
 ];
 
@@ -192,7 +192,7 @@ export const COIN = [
     },
     {
        label : "Both",
-       value : "both"
+       value : "Both"
     }
 ];
 

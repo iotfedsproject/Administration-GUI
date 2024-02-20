@@ -7,7 +7,11 @@ import { COMPARATOR, QOS_METRICS, FEDERATION_VISIBILITY_TYPES} from "../../confi
 import  FederationRules  from "./federation-rules";
 
 
-const FederationPanelBody = ({ federation, userPlatforms, availableInfoModels, onOpenLeaveModal, isAdmin }) => {
+
+
+
+
+const FederationPanelBody = ({ federation, userPlatforms, availableInfoModels, userName,onOpenLeaveModal,onOpenLeaveWithVoteModal, isAdmin }) => {
 
     const notSpecified = "NOT_SPECIFIED";
     const informationModelId = federation.informationModel ? federation.informationModel.id : notSpecified;
@@ -19,28 +23,41 @@ const FederationPanelBody = ({ federation, userPlatforms, availableInfoModels, o
         label: "Not Specified",
         value: notSpecified
     }];
+
     userPlatforms = userPlatforms ? userPlatforms : {};
 
     const leaveButton = (ownsPlatform, platformId, width) => {
         return(
             isAdmin || ownsPlatform ?
                 <Col lg={12 - width} md={12 - width} sm={12 - width} xs={12 - width}
-                     style={{paddingTop: "6px"}}>
-                    <Button bsStyle="danger" bsSize="xsmall"
+                     style={{paddingTop: "1px"}}>
+                    <Button bsStyle="danger" size="lg"
                             onClick={() => {
                                 onOpenLeaveModal(federation.id, platformId)
                             }}
                     >
-                        <Glyphicon glyph="minus" />
+                       Remove member from federation
                     </Button>
                 </Col>
-                : ""
+                : <Col lg={12 - width} md={12 - width} sm={12 - width} xs={12 - width}
+                   style={{paddingTop: "1px"}}>
+                    <Button bsStyle="success" size="lg"
+                      onClick={() => {
+                         onOpenLeaveWithVoteModal(federation.id, platformId)
+                       }}
+                      >
+                      Activate Vote to remove member
+                      {/*<Glyphicon glyph="minus" />*/}
+                      </Button>
+                    </Col>
         )
     };
 
     const RenderInputField = (props) => {
         const { value, label, type, ownsPlatform, isFederatedPlatformId, isPlatformIdField } = props;
-        const width = isFederatedPlatformId ? 10 : 12;
+
+        //const width = isFederatedPlatformId ? 10 : 12;
+        const width = 10;
 
         return (
             <FormGroup>
@@ -52,12 +69,12 @@ const FederationPanelBody = ({ federation, userPlatforms, availableInfoModels, o
                             value={value}
                             disabled={true} />
                     </Col>
-                    {isPlatformIdField ? leaveButton(ownsPlatform, value, width) : ""}
+                    {isPlatformIdField ? leaveButton(ownsPlatform, value, width) : ""}{/*TODO replace true with ownsPlatform*/}
                 </Row>
             </FormGroup>
         );
     };
-
+//--------------------------------------------------------------------------
     const ownsPlatform = (platformId, userPlatforms) => {
         if (!userPlatforms) {
             // is admin
@@ -65,6 +82,18 @@ const FederationPanelBody = ({ federation, userPlatforms, availableInfoModels, o
         }
         return _.keysIn(userPlatforms).indexOf(platformId) > -1
     };
+ //------------------------------------------------------------------------
+    const ownsOrganization =(userName,organizationNameMember)=> {
+
+     if(userName === organizationNameMember){
+      console.log("return true;");
+      return true;
+      }
+      else{
+       console.log("return false;");
+       return false;
+      }
+    };//
 
     const RenderQoSConstraint = (qosConstraintObject) => {
         const { qosConstraint } = qosConstraintObject;
@@ -144,8 +173,10 @@ const FederationPanelBody = ({ federation, userPlatforms, availableInfoModels, o
     };
 
     const displayQoSConstraints = (qosConstraints) => {
-        if (qosConstraints)
+    console.log("xxxxxxxxxxxxxxxxxxxxxx displayQoSConstraints XXXXXXXXXXXXX");
+        if (qosConstraints){
             return (
+
                 <Col lg={12} md={12} sm={12} xs={12}>
                     <ControlLabel>QoS Constraints</ControlLabel>
 
@@ -163,12 +194,30 @@ const FederationPanelBody = ({ federation, userPlatforms, availableInfoModels, o
 
                     <FederationRules
                      federation={federation}
-                     ioTFedsRules = {federation.SmartContract.IoTFedsRules}
-                     title= "Update Federation Rules"
+                     ioTFedsRules = {federation.smartContract.IoTFedsRules}
+                     readOnly = {true}
+                     title = "Federation Rules"
+                     //title= "Update Federation Rules"}
                      readValuesFromBackend = {true}
-                     readOnly = {false}
+
                     />
                 </Col>);
+                }else{
+                 return (
+                 <Col lg={12} md={12} sm={12} xs={12}>
+                 <FederationRules
+                     federation={federation}
+                     ioTFedsRules = {federation.smartContract.IoTFedsRules}
+                     readOnly = {true}
+                     title = "Federation Rules"
+                     //title= "Update Federation Rules"}
+                     readValuesFromBackend = {true}
+
+                    />
+                </Col>);
+
+
+                }
     };
 
     return(
@@ -213,16 +262,18 @@ const FederationPanelBody = ({ federation, userPlatforms, availableInfoModels, o
             </Row>
 
             <Row>
-                <Col lg={12} md={12} sm={12} xs={12}>
-                    <ControlLabel>Federation Members</ControlLabel>
-                    {federation.members.map(member =>
+                <Col lg={9} md={9} sm={9} xs={9}>
+                    <ControlLabel>Federation Organization Members</ControlLabel>
+
+                    {federation.organizationMembers.map(member =>
                         <RenderInputField
-                            value={member.platformId}
-                            key={member.platformId}
+                            value={member}
+                            key={member}
                             type="text"
                             isPlatformIdField={true}
                             isFederatedPlatformId={true}
-                            ownsPlatform={ownsPlatform(member.platformId, userPlatforms)}
+                            ownsPlatform = {ownsOrganization(userName,member)}
+                            //ownsPlatform={ownsPlatform(member.platformId, userPlatforms)}
                         />
                     )}
                 </Col>

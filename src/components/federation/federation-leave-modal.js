@@ -3,8 +3,10 @@ import { Button, Modal } from "react-bootstrap";
 
 const FederationLeaveModal = ({ federation, platformId, modalOpen, closeModal, handleLeaveFederation }) => {
 
+
     // This function is used in order to preserve the animation on closing the modal
     const modalContent = () => {
+
         return(
             federation ?
                 <Fragment>
@@ -14,7 +16,7 @@ const FederationLeaveModal = ({ federation, platformId, modalOpen, closeModal, h
                     </Modal.Header>
                     <Modal.Footer>
                         <Button type="button" bsStyle="danger"
-                                onClick={handleLeaveFederation}>Verify Deletion</Button>
+                                onClick={handleLeaveFederation}>Verify Organization Removement</Button>
                         <Button type="button" bsStyle="default"
                                 onClick={closeModal}>Close</Button>
                     </Modal.Footer>

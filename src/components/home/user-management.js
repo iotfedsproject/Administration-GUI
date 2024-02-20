@@ -12,7 +12,7 @@ const UserManagement = (props) => {
     return (
         <div className="content">
             <div className="wrapper platform">
-                <div className="title">IotFeds User Management</div>
+                <div className="title" style={{color: "#FFFFFF"}}>IotFeds User Management</div>
                 <div className="icon">
                     <img src={suitcase} alt="suitcase"/>
                 </div>

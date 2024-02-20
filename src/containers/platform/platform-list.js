@@ -17,6 +17,7 @@ import {
 import { ROOT_URL } from "../../configuration/index";
 import { PLATFORM_REGISTRATION_MODAL, USER_LOGIN_MODAL } from "../../reducers/modal/modal-reducer";
 import {fetchUserServices} from "../../actions/owned-services-actions";
+import {SERVICE_OWNER,USER} from "../../configuration/roles";
 
 class PlatformList extends Component {
 
@@ -99,8 +100,9 @@ class PlatformList extends Component {
         const { availablePlatforms, successfulPlatformRegistration, successfulPlatformUpdate,
             successfulPlatformDeletion, platformDeletionError, fetchUserPlatformError } = this.props.userPlatforms;
         const { platformIdToDelete } = this.props.platformDeleteModal;
-        const { platformId } = this.props.platformConfigModal;
-
+        const { platformId }         = this.props.platformConfigModal;
+        //this.props.userDetails.role=USER;
+        const { role, username }     = this.props.userDetails;
         return(
             <Fragment>
                 <FieldError error={fetchUserPlatformError}/>
@@ -115,6 +117,7 @@ class PlatformList extends Component {
                 <Button
                     className="registration-btn"
                     bsStyle="info"
+                    disabled={role === USER}
                     onClick={this.openRegistrationModal}>
                     Register New Platform
                 </Button>
@@ -123,6 +126,7 @@ class PlatformList extends Component {
                     return <CollapsiblePlatformPanel
                         key={platform.id}
                         platform={platform}
+                        role = {role}
                         informationModels={this.props.informationModels}
                         openModal={this.props.activatePlatformModal} />
                 })}
@@ -149,7 +153,8 @@ function mapStateToProps(state) {
         informationModels: state.informationModels,
         platformDeleteModal: state.platformDeleteModal,
         platformUpdateModal: state.platformUpdateModal,
-        platformConfigModal: state.platformConfigModal
+        platformConfigModal: state.platformConfigModal,
+        userDetails: state.userDetails
     };
 }
 

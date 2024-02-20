@@ -7,7 +7,7 @@ import  FederationRules  from "./federation-rules";
 
 
 //TODO userPlatforms perhaps must be replaced by availablePlatforms?
-const FederationPanelBody = ({ federation, userPlatforms, availableInfoModels, onOpenLeaveModal, isAdmin }) => {
+const FederationPanelBody = ({ federation, userPlatforms, availableInfoModels,userName, onOpenLeaveModal, isAdmin }) => {
 
     const notSpecified = "NOT_SPECIFIED";
     const informationModelId = federation.informationModel ? federation.informationModel.id : notSpecified;
@@ -66,6 +66,23 @@ const FederationPanelBody = ({ federation, userPlatforms, availableInfoModels, o
         return _.keysIn(userPlatforms).indexOf(platformId) > -1
     };
 
+//------------------------------------------------------------------------
+      const ownsOrganization =(userName,organizationNameMember)=> {
+         console.log("federation-join-panel-body.js, ownsOrganization");
+
+         console.log(userName);
+         console.log(organizationNameMember);
+
+         if(userName === organizationNameMember){
+          console.log("return true;");
+          return true;
+          }
+          else{
+           console.log("return false;");
+           return false;
+          }
+        };
+//-----------------------------------------------------------------------------------
     const RenderQoSConstraint = (qosConstraintObject) => {
         const { qosConstraint } = qosConstraintObject;
 
@@ -149,7 +166,7 @@ const FederationPanelBody = ({ federation, userPlatforms, availableInfoModels, o
                     }
                       <FederationRules
                         federation={federation}
-                        ioTFedsRules = {federation.SmartContract.IoTFedsRules}
+                        ioTFedsRules = {federation.smartContract.IoTFedsRules}
                         title = "Federation Rules"
                         readValuesFromBackend = {true}
                         readOnly = {true}
@@ -202,15 +219,16 @@ const FederationPanelBody = ({ federation, userPlatforms, availableInfoModels, o
 
             <Row>
                 <Col lg={12} md={12} sm={12} xs={12}>
-                    <ControlLabel>Federation Members</ControlLabel>
-                    {federation.members.map(member =>
+                    <ControlLabel>Federation Organization Members</ControlLabel>
+                    {federation.organizationMembers.map(member =>
                         <RenderInputField
-                            value={member.platformId}
-                            key={member.platformId}
+                            value={member}
+                            key={member}
                             type="text"
                             isPlatformIdField={true}
                             isFederatedPlatformId={true}
-                            ownsPlatform={ownsPlatform(member.platformId, userPlatforms)}
+                            ownsPlatform = {ownsOrganization(userName,member)}
+                            //ownsPlatform={ownsPlatform(member.platformId, userPlatforms)}
                         />
                     )}
                 </Col>

@@ -7,6 +7,9 @@ import { getValidationState } from "../../validation/helpers";
 import { FEDERATION_VISIBILITY_TYPES } from "../../configuration";
 import RFReactSelect from "../../helpers/redux-form-react-selector-integrator";
 import { renderPlatforms } from "../../helpers/render-platformId-fields";
+import { renderBgov } from "../../helpers/render-bgov-fields";
+
+
 
 import  FederationRules  from "./federation-rules";
 import { RULE_TYPES,DATA_AVAILABILITY,SERVICE_TYPES,SUPPORTED_ONTOLOGIES,BOARD_GOV,PROPOSALS,APPROVAL_PERCENT,VOTE_RULES_BASE,UNDER_PERFORMANCE,CHARGE_POLICY,FED_PRODUCT,PROFIT_POLICY,COIN   } from "../../configuration/index";
@@ -14,7 +17,9 @@ import { RULE_TYPES,DATA_AVAILABILITY,SERVICE_TYPES,SUPPORTED_ONTOLOGIES,BOARD_G
 
 const FederationFormBody = ({ federations, informationModels, isActive }) => {
     return (
-        <Fragment>
+        <Fragment >
+        <div>{/*3 style={{display: "flex"}}*/}
+         <div>{/*1*/}
             <Row>
                 <Col lg={6} md={6} sm={6} xs={6}>
                     <Field
@@ -77,7 +82,7 @@ const FederationFormBody = ({ federations, informationModels, isActive }) => {
             <Row>
                 <Col lg={12} md={12} sm={12} xs={12}>
                     <FieldArray
-                        name="members" maxLength={30} label="Federation Members"
+                        name="members" maxLength={30} label="Name of Organization"
                         placeholder="Enter the organization"
                         helpMessage={"From 4 to 30 characters. Include only letters, digits, '-' and '_'"}
                         errorField={federations.members_id_error}
@@ -101,16 +106,19 @@ const FederationFormBody = ({ federations, informationModels, isActive }) => {
                     />
                 </Col>
             </Row>
-                  <div className="qos-constraint">
-                           <h3><strong>Federation rule types</strong></h3>
+              </div>{/*1*/}
+
+                  <div className="qos-constraint">{/*2*/}
+                           <h3><strong>Federation type</strong></h3>
                              <Row>
                               <Col lg={6} md={6} sm={6} xs={6}>
-                                <FormGroup controlId="regRuleTypeId" style={{zIndex: "5"}}>
-                                  <ControlLabel>Rule Type</ControlLabel>
+                                <FormGroup controlId="regRuleTypeId" style={{zIndex: "5"}} >
+
+                                  <ControlLabel>Members Type</ControlLabel>
 
                                     <Field
                                        name="regRuleTypeId"
-                                       placeholder="Select the type of rules"
+                                       placeholder="Select the type of members"
                                        options={RULE_TYPES}
                                        component={RFReactSelect}
                                      />
@@ -122,10 +130,10 @@ const FederationFormBody = ({ federations, informationModels, isActive }) => {
 
                               <Col lg={6} md={6} sm={6} xs={6}>
                                  <FormGroup controlId="regDataAvailabilityId" style={{zIndex: "5"}}>
-                                    <ControlLabel>Data Availability</ControlLabel>
+                                    <ControlLabel>Products Visibility</ControlLabel>
                                      <Field
                                        name="regDataAvailabilityId"
-                                       placeholder="Select the data availability"
+                                       placeholder="Select the product visibility"
                                        options={DATA_AVAILABILITY}
                                        component={RFReactSelect}
                                       />
@@ -157,7 +165,7 @@ const FederationFormBody = ({ federations, informationModels, isActive }) => {
                                     {/* <ControlLabel>Supported Ontologies</ControlLabel>*/}
                                        <Field
                                          name="regSupportedOntologiesId"
-                                         label = "Supported Ontologies" placeholder="Insert the  ontology"
+                                         label = "Supported Ontologies" placeholder="Insert the ontology"
                                          //{/*options={SUPPORTED_ONTOLOGIES}*/}
                                          component={renderInputField}
                                        />
@@ -167,43 +175,72 @@ const FederationFormBody = ({ federations, informationModels, isActive }) => {
                                   </Col>
 
                                  </Row>
-                                </div>
+                                </div>{/*2*/}
+                             </div>{/*3*/}
+
+                {/*********************************** second form row ****************************************/}
 
                                 <div className="qos-constraint">
-                                <h3><strong>Federation government rules </strong></h3>
-                                 <Row>
-                                  <Col lg={6} md={6} sm={6} xs={6}>
-                                   <FormGroup controlId="regBoardGovId" style={{zIndex: "5"}}>
-                                    {/*<ControlLabel>Board Gov</ControlLabel>*/}
-                                       <Field
-                                        name="regBoardGovId"
-                                        label = "Board Gov" placeholder="Insert the board gov"
-                                        //{/*options={BOARD_GOV}*/}
-                                        component={renderInputField}
-                                       />
+                                <h3><strong>Federation Governance</strong></h3>
+
+                                <Row style={{display: "none"}}>
+                                  <Col lg={12} md={12} sm={12} xs={12}>
+                                  {/* <FormGroup controlId="regBoardGovId" style={{zIndex: "5"}}>*/}
+                                       <FieldArray
+                                         name="regBoardGovId" maxLength={30} label="Board government"
+                                         placeholder="Add the board government"
+                                         helpMessage={"From 4 to 30 characters. Include only letters, digits, '-' and '_'"}
+                                         errorField={federations.members_id_error}
+                                         isActive={isActive}
+                                         component={renderBgov}
+                                      />
+
                                   {/* <HelpBlock>Mandatory</HelpBlock>*/}
                                   {/*<FieldError error={slaConstraints_comparator_error ? slaConstraints_comparator_error[index] : ""} />*/}
-                                </FormGroup>
+                               {/* </FormGroup>*/}
                                </Col>
-
-                               <Col lg={6} md={6} sm={6} xs={6}>
-                                  <FormGroup controlId="regproposalsId" style={{zIndex: "5"}}>
-                                   {/*<ControlLabel>Proposals</ControlLabel>*/}
-                                     <Field
-                                       name="regproposalsId"
-                                       label = "Proposals" placeholder="Insert the supported proposal"
-                                      // {/*options={PROPOSALS}*/}
-                                       component={renderInputField}
-                                  />
-                                {/* <HelpBlock>Mandatory</HelpBlock>*/}
-                                {/*<FieldError error={slaConstraints_comparator_error ? slaConstraints_comparator_error[index] : ""} />*/}
-                               </FormGroup>
-                               </Col>
-
                                </Row>
 
-                               <Row>
-                                <Col lg={6} md={6} sm={6} xs={6}>
+                                <Row>
+                                  <Col lg={12} md={12} sm={12} xs={12}>
+                                  {/* <FormGroup controlId="regBoardGovId" style={{zIndex: "5"}}>*/}
+                                       <FieldArray
+                                         name="regproposalsId" maxLength={30} label="Insert the supported proposals."
+                                         placeholder="Add the proposal"
+                                         helpMessage={"Add one of the following: ChangeRule,DeleteFed,InviteMember,JoinRequest,RequestRemove"}
+                                         errorField={federations.members_id_error}
+                                         isActive={isActive}
+                                         component={renderBgov}
+                                      />
+
+                                  {/* <HelpBlock>Mandatory</HelpBlock>*/}
+                                  {/*<FieldError error={slaConstraints_comparator_error ? slaConstraints_comparator_error[index] : ""} />*/}
+                               {/* </FormGroup>*/}
+                               </Col>
+                               </Row>
+
+
+
+                                <Row>
+                                 <Col lg={4} md={4} sm={4} xs={4}>
+                                  <FormGroup controlId="regvoteRulesBaseId" style={{zIndex: "5"}}>
+                                  <ControlLabel>Vote Rules Base</ControlLabel>
+                                   <Field
+                                     name="regvoteRulesBaseId"
+                                     placeholder="Select the vote rules base"
+                                     options={VOTE_RULES_BASE}
+                                     component={RFReactSelect}
+                                   />
+                                   {/* <HelpBlock>Mandatory</HelpBlock>*/}
+                                   {/*<FieldError error={slaConstraints_comparator_error ? slaConstraints_comparator_error[index] : ""} />*/}
+                                  </FormGroup>
+                                 </Col>
+
+
+
+
+
+                                <Col lg={4} md={4} sm={4} xs={4}>
                                  <FormGroup controlId="regTokensId" style={{zIndex: "5"}}>
                                  {/*<ControlLabel>Tokens</ControlLabel>*/}
                                   <Field
@@ -217,7 +254,7 @@ const FederationFormBody = ({ federations, informationModels, isActive }) => {
                                </FormGroup>
                               </Col>
 
-                              <Col lg={6} md={6} sm={6} xs={6}>
+                              <Col lg={4} md={4} sm={4} xs={4}>
                                <FormGroup controlId="regapprovalPercentId" style={{zIndex: "5"}}>
                                  <ControlLabel>Vote Rules Approval %</ControlLabel>
                                   <Field
@@ -231,22 +268,13 @@ const FederationFormBody = ({ federations, informationModels, isActive }) => {
 
                                </FormGroup>
                                   </Col>
+
+
+
                                </Row>
 
                                <Row>
-                                <Col lg={6} md={6} sm={6} xs={6}>
-                                 <FormGroup controlId="regvoteRulesBaseId" style={{zIndex: "5"}}>
-                                 <ControlLabel>Vote Rules Base</ControlLabel>
-                                  <Field
-                                    name="regvoteRulesBaseId"
-                                    placeholder="Select the vote rules base"
-                                    options={VOTE_RULES_BASE}
-                                    component={RFReactSelect}
-                                  />
-                                  {/* <HelpBlock>Mandatory</HelpBlock>*/}
-                                  {/*<FieldError error={slaConstraints_comparator_error ? slaConstraints_comparator_error[index] : ""} />*/}
-                                 </FormGroup>
-                                 </Col>
+
                                 </Row>
                               </div>
 
@@ -271,7 +299,7 @@ const FederationFormBody = ({ federations, informationModels, isActive }) => {
                             {/*<ControlLabel>Reputation %</ControlLabel>*/}
                           <Field
                             name="regreputationPercentId"
-                            label = "Reputation %" placeholder="Insert the reputation %"
+                            label = "QoE %" placeholder="Insert the QoE  %"
                             component={renderInputField}
                           />
                       {/* <HelpBlock>Mandatory</HelpBlock>*/}
@@ -284,8 +312,8 @@ const FederationFormBody = ({ federations, informationModels, isActive }) => {
                       {/*<ControlLabel>Min Number of Federations</ControlLabel>*/}
                        <Field
                         name="regMinValueFedId"
-                        label = "Min Number of Federations" type="text"
-                        placeholder="Insert the minimum value fed"
+                        label = "Min reputation value" type="text"
+                        placeholder="Insert the min value of reputation"
                         component={renderInputField}
                      />
                     {/* <HelpBlock>Mandatory</HelpBlock>*/}
@@ -295,10 +323,10 @@ const FederationFormBody = ({ federations, informationModels, isActive }) => {
 
                         <Col lg={6} md={6} sm={6} xs={6}>
                           <FormGroup controlId="regUnderperformanceId" style={{zIndex: "5"}}>
-                            <ControlLabel>Under Performance</ControlLabel>
+                            <ControlLabel>Quality violation policy</ControlLabel>
                              <Field
                               name="regUnderperformanceId"
-                              placeholder="Select the Under performance value"
+                              placeholder="Select the Quality violation policy value"
                               options={UNDER_PERFORMANCE}
                               component={RFReactSelect}
                              />
@@ -309,6 +337,7 @@ const FederationFormBody = ({ federations, informationModels, isActive }) => {
                         </Row>
                         </div>
 
+                        {/************************* Marketplace policy *****************************/}
                          <div className="qos-constraint">
                            <h3><strong>Marketplace policy</strong></h3>
                            <Row>
@@ -338,16 +367,15 @@ const FederationFormBody = ({ federations, informationModels, isActive }) => {
                          {/*<FieldError error={slaConstraints_comparator_error ? slaConstraints_comparator_error[index] : ""} />*/}
                      </FormGroup>
                    </Col>
-
                </Row>
 
                <Row>
                  <Col lg={6} md={6} sm={6} xs={6}>
                    <FormGroup controlId="regProfitPolicyId" style={{zIndex: "5"}}>
-                    <ControlLabel>Profit Policy</ControlLabel>
+                    <ControlLabel>Compensation Policy</ControlLabel>
                        <Field
                          name="regProfitPolicyId"
-                         placeholder="Select the supported Profit Policy"
+                         placeholder="Select the compensation Policy"
                          options={PROFIT_POLICY}
                          component={RFReactSelect}
                       />
@@ -371,9 +399,216 @@ const FederationFormBody = ({ federations, informationModels, isActive }) => {
                   </FormGroup>
                 </Col>
               </Row>
+              <Row>
+             {/**************************************************************************************/}
+              <Col lg={6} md={6} sm={6} xs={6}>
+               <FormGroup controlId="regFedMarketChargeId" style={{zIndex: "5"}}>
+                <Field
+                  name="regFedMarketChargeId"
+                  label = "Federation Marketplace Charge" type="text"
+                  placeholder="Insert the Federation Marketplace Charge"
+                  component={renderInputField}
+                />
+                </FormGroup>
+              </Col>
+              <Col lg={6} md={6} sm={6} xs={6}>
+               <FormGroup controlId="regGlobalMarketChargeId" style={{zIndex: "5"}}>
+                <Field
+                  name="regGlobalMarketChargeId"
+                  label = "Global Marketplace Charge" type="text"
+                  placeholder="Insert the Global Marketplace Charge"
+                  component={renderInputField}
+                />
+                </FormGroup>
+              </Col>
+            {/**************************************************************************************/}
+
+              </Row>
 
 
            </div>
+           {/*//////////////////////////////*/}
+            <div className="qos-constraint">
+              <h3><strong>Quality of Experience Weights</strong></h3>
+                  <Row>
+                   <Col lg={6} md={6} sm={6} xs={6}>
+                    <FormGroup controlId="regBusinessEnablementId" style={{zIndex: "5"}}>
+                     {/*<ControlLabel>Enablement</ControlLabel>*/}
+                       <Field
+                        name="regBusinessEnablementId" type="text"
+                        label = "Business Enablement" placeholder="Insert the business enablement "
+                        component={renderInputField}
+                       />
+                     {/* <HelpBlock>Mandatory</HelpBlock>*/}
+                     {/*<FieldError error={slaConstraints_comparator_error ? slaConstraints_comparator_error[index] : ""} />*/}
+                     </FormGroup>
+                    </Col>
+
+                    <Col lg={6} md={6} sm={6} xs={6}>
+                     <FormGroup controlId="regCompletenessId" style={{zIndex: "5"}}>
+                      {/*<ControlLabel>CompletenessI</ControlLabel>*/}
+                       <Field
+                        name="regCompletenessId"
+                        label = "Completeness" placeholder="Insert the Completeness"
+                        component={renderInputField}
+                       />
+                       {/* <HelpBlock>Mandatory</HelpBlock>*/}
+                      {/*<FieldError error={slaConstraints_comparator_error ? slaConstraints_comparator_error[index] : ""} />*/}
+                    </FormGroup>
+                    </Col>
+                    </Row>
+
+                    <Row>
+                    <Col lg={6} md={6} sm={6} xs={6}>
+                     <FormGroup controlId="regCorrectnessId" style={{zIndex: "5"}}>
+                      {/*<ControlLabel>Correctness</ControlLabel>*/}
+                       <Field
+                        name="regCorrectnessId"
+                        label = "Correctness" type="text"
+                        placeholder="Insert the Correctness value"
+                        component={renderInputField}
+                     />
+                    {/* <HelpBlock>Mandatory</HelpBlock>*/}
+                    {/*<FieldError error={slaConstraints_comparator_error ? slaConstraints_comparator_error[index] : ""} />*/}
+                    </FormGroup>
+                   </Col>
+                   <Col lg={6} md={6} sm={6} xs={6}>
+                     <FormGroup controlId="regEasyOfUseId" style={{zIndex: "5"}}>
+                      {/*<ControlLabel>Easy of Use</ControlLabel>*/}
+                       <Field
+                        name="regEasyOfUseId"
+                        label = "Easy of Use" type="text"
+                        placeholder="Insert the Easy of Use value"
+                        component={renderInputField}
+                     />
+                    {/* <HelpBlock>Mandatory</HelpBlock>*/}
+                    {/*<FieldError error={slaConstraints_comparator_error ? slaConstraints_comparator_error[index] : ""} />*/}
+                    </FormGroup>
+                   </Col>
+                   </Row>
+
+                   <Row>
+                    <Col lg={6} md={6} sm={6} xs={6}>
+                     <FormGroup controlId="regPrecisionId" style={{zIndex: "5"}}>
+                      {/*<ControlLabel>Precision</ControlLabel>*/}
+                       <Field
+                        name="regPrecisionId"
+                        label = "Precision" type="text"
+                        placeholder="Insert the Precision value"
+                        component={renderInputField}
+                     />
+                    {/* <HelpBlock>Mandatory</HelpBlock>*/}
+                    {/*<FieldError error={slaConstraints_comparator_error ? slaConstraints_comparator_error[index] : ""} />*/}
+                    </FormGroup>
+                   </Col>
+                   <Col lg={6} md={6} sm={6} xs={6}>
+                     <FormGroup controlId="regRelevanceId" style={{zIndex: "5"}}>
+                      {/*<ControlLabel>Relevance</ControlLabel>*/}
+                       <Field
+                        name="regRelevanceId"
+                        label = "Relevance" type="text"
+                        placeholder="Insert the Relevance value"
+                        component={renderInputField}
+                     />
+                    {/* <HelpBlock>Mandatory</HelpBlock>*/}
+                    {/*<FieldError error={slaConstraints_comparator_error ? slaConstraints_comparator_error[index] : ""} />*/}
+                    </FormGroup>
+                   </Col>
+                   </Row>
+
+                   <Row>
+                    <Col lg={6} md={6} sm={6} xs={6}>
+                     <FormGroup controlId="regResponseTimeId" style={{zIndex: "5"}}>
+                      {/*<ControlLabel>Response Time</ControlLabel>*/}
+                       <Field
+                        name="regResponseTimeId"
+                        label = "Response Time" type="text"
+                        placeholder="Insert the Response Time  value"
+                        component={renderInputField}
+                     />
+                    {/* <HelpBlock>Mandatory</HelpBlock>*/}
+                    {/*<FieldError error={slaConstraints_comparator_error ? slaConstraints_comparator_error[index] : ""} />*/}
+                    </FormGroup>
+                   </Col>
+                   <Col lg={6} md={6} sm={6} xs={6}>
+                     <FormGroup controlId="regValueForMoneyId" style={{zIndex: "5"}}>
+                      {/*<ControlLabel>Relevance</ControlLabel>*/}
+                       <Field
+                        name="regValueForMoneyId"
+                        label = "Value for Money" type="text"
+                        placeholder="Insert the Value for Money value"
+                        component={renderInputField}
+                     />
+                    {/* <HelpBlock>Mandatory</HelpBlock>*/}
+                    {/*<FieldError error={slaConstraints_comparator_error ? slaConstraints_comparator_error[index] : ""} />*/}
+                    </FormGroup>
+                   </Col>
+                   </Row>
+
+            </div>
+              <div className="qos-constraint">
+                <h3><strong>Quality Of Service parameters</strong></h3>
+                     <Row>
+                       <Col lg={6} md={6} sm={6} xs={6}>
+                        <FormGroup controlId="regQualityOfservicePercentageId" style={{zIndex: "5"}}>
+                         {/*<ControlLabel>Response Time</ControlLabel>*/}
+                         <Field
+                          name="regQualityOfservicePercentageId"
+                          label = "Quality Of Service Percentage " type="text"
+                          placeholder="Insert the Quality of Service Percentage"
+                          component={renderInputField}
+                         />
+                         {/* <HelpBlock>Mandatory</HelpBlock>*/}
+                         {/*<FieldError error={slaConstraints_comparator_error ? slaConstraints_comparator_error[index] : ""} />*/}
+                        </FormGroup>
+                       </Col>
+                      </Row>
+                       <h4>Quality of Service Weights</h4>
+                      <Row>
+
+                       <Col lg={4} md={4} sm={4} xs={4}>
+                        <FormGroup controlId="regQosAvailabilityId" style={{zIndex: "5"}}>
+                         {/*<ControlLabel>Response Time</ControlLabel>*/}
+                         <Field
+                          name="regQosAvailabilityId"
+                          label = "Availability" type="text"
+                          placeholder="Insert Availability weight"
+                          component={renderInputField}
+                         />
+                         {/* <HelpBlock>Mandatory</HelpBlock>*/}
+                         {/*<FieldError error={slaConstraints_comparator_error ? slaConstraints_comparator_error[index] : ""} />*/}
+                        </FormGroup>
+                       </Col>
+                       <Col lg={4} md={4} sm={4} xs={4}>
+                        <FormGroup controlId="regQosPrecisionId" style={{zIndex: "5"}}>
+                         {/*<ControlLabel>Response Time</ControlLabel>*/}
+                         <Field
+                          name="regQosPrecisionId"
+                          label = "Precision" type="text"
+                          placeholder="Insert Precision weight"
+                          component={renderInputField}
+                         />
+                         {/* <HelpBlock>Mandatory</HelpBlock>*/}
+                         {/*<FieldError error={slaConstraints_comparator_error ? slaConstraints_comparator_error[index] : ""} />*/}
+                        </FormGroup>
+                       </Col>
+                        <Col lg={4} md={4} sm={4} xs={4}>
+                        <FormGroup controlId="regQosResponseTimeId" style={{zIndex: "5"}}>
+                         {/*<ControlLabel>Response Time</ControlLabel>*/}
+                         <Field
+                          name="regQosResponseTimeId"
+                          label = "Response Time" type="text"
+                          placeholder="Insert Response Time"
+                          component={renderInputField}
+                         />
+                         {/* <HelpBlock>Mandatory</HelpBlock>*/}
+                         {/*<FieldError error={slaConstraints_comparator_error ? slaConstraints_comparator_error[index] : ""} />*/}
+                        </FormGroup>
+                       </Col>
+                      </Row>
+
+              </div>
+           {/*//////////////////////////////*/}
         </Fragment>
     );
 };

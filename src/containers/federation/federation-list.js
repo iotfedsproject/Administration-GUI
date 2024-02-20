@@ -4,15 +4,19 @@ import { connect } from "react-redux";
 import _ from "lodash";
 import CollapsibleFederationPanel from "../../components/federation/collapsible-federation-panel";
 import FederationLeaveModal from "../../components/federation/federation-leave-modal";
+import FederationLeaveWithVoteModal from "../../components/federation/federation-leave-with-vote-modal";
 import FederationDeleteModal from "../../components/federation/federation-delete-modal";
 import FederationInviteModal from "../../components/federation/federation-invite-modal";
+import ChangeFederationRulesModal from "../../components/federation/federation-change-rules-modal";
 import { FieldError, AlertDismissable } from "../../helpers/errors";
 import { fetchAllInformationModels, fetchUserInformationModels } from "../../actions/info-model-actions";
 import {
     fetchFederations, deleteFederation, leaveFederation,
     activateFederationDeleteModal, deactivateFederationDeleteModal,
     activateFederationLeaveModal, deactivateFederationLeaveModal,
-    activateFederationInviteModal
+    activateFederationLeaveWithVoteModal, deactivateFederationLeaveWithVoteModal,
+    activateFederationInviteModal,activateFederationChangeRulesModal,changeFederationRules,
+    leaveFederationWithVote
 } from "../../actions/federation-actions";
 import {
     changeModalState,
@@ -21,24 +25,29 @@ import {
     DISMISS_FEDERATION_DELETION_ERROR_ALERT,
     DISMISS_FEDERATION_LEAVE_SUCCESS_ALERT,
     DISMISS_FEDERATION_LEAVE_ERROR_ALERT,
-    DISMISS_FEDERATION_INVITATION_SUCCESS_ALERT
+    DISMISS_FEDERATION_INVITATION_SUCCESS_ALERT,
+    DISMISS_FEDERATION_CHANGE_RULES_SUCCESS_ALERT
 } from "../../actions";
 import { ROOT_URL } from "../../configuration";
 import { USER_LOGIN_MODAL } from "../../reducers/modal/modal-reducer";
 import { getUserFederations } from "../../selectors";
+import { getUserName } from "../../selectors";
+import { getUserOrganizations } from "../../selectors";
 
 class FederationList extends Component {
 
     constructor() {
         super();
 
-        this.handleDeleteFederation = this.handleDeleteFederation.bind(this);
-        this.handleLeaveFederation = this.handleLeaveFederation.bind(this);
-        this.dismissFederationLeaveSuccessAlert = this.dismissFederationLeaveSuccessAlert.bind(this);
-        this.dismissFederationLeaveErrorAlert = this.dismissFederationLeaveErrorAlert.bind(this);
-        this.dismissFederationDeletionSuccessAlert = this.dismissFederationDeletionSuccessAlert.bind(this);
-        this.dismissFederationDeletionErrorAlert = this.dismissFederationDeletionErrorAlert.bind(this);
-        this.dismissFederationInvitationSuccessAlert = this.dismissFederationInvitationSuccessAlert.bind(this);
+        this.handleDeleteFederation                   = this.handleDeleteFederation.bind(this);
+        this.handleLeaveFederation                    = this.handleLeaveFederation.bind(this);
+        this.handleLeaveFederationWithVote            = this.handleLeaveFederationWithVote.bind(this);
+        this.dismissFederationLeaveSuccessAlert       = this.dismissFederationLeaveSuccessAlert.bind(this);
+        this.dismissFederationLeaveErrorAlert         = this.dismissFederationLeaveErrorAlert.bind(this);
+        this.dismissFederationDeletionSuccessAlert    = this.dismissFederationDeletionSuccessAlert.bind(this);
+        this.dismissFederationDeletionErrorAlert      = this.dismissFederationDeletionErrorAlert.bind(this);
+        this.dismissFederationInvitationSuccessAlert  = this.dismissFederationInvitationSuccessAlert.bind(this);
+        this.dismissFederationChangeRulesSuccessAlert = this.dismissFederationChangeRulesSuccessAlert.bind(this);
     }
 
     componentDidMount() {
@@ -47,13 +56,34 @@ class FederationList extends Component {
         this.props.fetchFederations();
     }
 
-    handleLeaveFederation = () => {
+    handleLeaveFederationWithVote = () => {
+            console.log("handleLeaveFederationWithVote " ,this.props.federationLeaveWithVoteModal);
+
+            const { federationId, platformId } = this.props.federationLeaveWithVoteModal;
+            const { isAdmin } = this.props;
+            console.log("handleLeaveFederationWithVote");
+            this.props.leaveFederationWithVote(federationId, platformId, isAdmin, (res) => {
+                const pattern = new RegExp(`${ROOT_URL}$`);
+
+                // If the root url is returned, that means that the user is not authenticated (possibly the
+                // session is expired, so we redirect to the homepage and open the login modal
+                if (pattern.test(res.request.responseURL)) {
+                    this.props.changeModalState(USER_LOGIN_MODAL, true);
+                    this.props.history.push(ROOT_URL);
+                }
+            });
+            this.props.deactivateFederationLeaveWithVoteModal();
+        };
+
+
+   handleLeaveFederation = () => {
+        console.log("handleLeaveFederation ");
         const { federationId, platformId } = this.props.federationLeaveModal;
         const { isAdmin } = this.props;
 
+
         this.props.leaveFederation(federationId, platformId, isAdmin, (res) => {
             const pattern = new RegExp(`${ROOT_URL}$`);
-
             // If the root url is returned, that means that the user is not authenticated (possibly the
             // session is expired, so we redirect to the homepage and open the login modal
             if (pattern.test(res.request.responseURL)) {
@@ -65,6 +95,7 @@ class FederationList extends Component {
     };
 
     handleDeleteFederation = () => {
+        console.log("handleDeleteFederation ");
         const { isAdmin } = this.props;
 
         this.props.deleteFederation(this.props.federationDeleteModal.federationIdToDelete, isAdmin, (res) => {
@@ -82,6 +113,8 @@ class FederationList extends Component {
 
     showFederationLeaveModal = (federationIdToLeave, platformIdToLeave, availableUserFederations,
                                 deactivateFederationLeaveModal, handleLeaveFederation) => {
+       console.log("######### showFederationLeaveModal 333 ############");
+
         return (
             availableUserFederations ?
                 <FederationLeaveModal
@@ -93,6 +126,40 @@ class FederationList extends Component {
                 : null
         );
     };
+
+   showFederationLeaveWithVoteModal = (federationIdToLeaveWithVote, platformIdToLeave, availableUserFederations,
+                                    deactivateFederationLeaveWithVoteModal, handleLeaveWithVoteFederation) => {
+           console.log("######### showFederationLeaveWithVoteModal ############");
+            return (
+                availableUserFederations ?
+                    <FederationLeaveWithVoteModal
+                        federation={availableUserFederations[federationIdToLeaveWithVote]}
+                        platformId={platformIdToLeave}
+                        modalOpen={!!federationIdToLeaveWithVote}
+                        closeModal={deactivateFederationLeaveWithVoteModal}
+                        handleLeaveFederationWithVote={handleLeaveWithVoteFederation}
+                         />
+                    : null
+            );
+        };
+
+  /*showFederationModal =  (federationIdToLeaveWithVote, platformIdToLeaveWithVote, availableUserFederations,
+                          deactivateFederationLeaveWithVoteModal, handleLeaveWithVoteFederation,
+                          federationIdToLeave, platformIdToLeave ,deactivateFederationLeaveModal, handleLeaveFederation ) => {
+                                   console.log("######### showFederationLeaveWithVoteModal ############");
+                                    return (
+                                        availableUserFederations ?
+                                            <FederationLeaveWithVoteModal
+                                                federation={availableUserFederations[federationIdToLeave]}
+                                                platformId={platformIdToLeaveWithVote}
+                                                modalOpen={!!federationIdToLeave}
+                                                closeModal={deactivateFederationLeaveModal}
+                                                handleLeaveFederationWithVote={handleLeaveWithVoteFederation}
+                                                 />
+                                            : null
+                                    );
+                                };*/
+
 
     showFederationDeleteModal = (federationIdToDelete, availableFederations,
                                  deactivateFederationDeleteModal, handleDeleteFederation) => {
@@ -106,6 +173,17 @@ class FederationList extends Component {
                 : null
         );
     };
+
+    showChangeFederationRulesModal = (federationIdToChangeRules, availableFederations,
+                                     deactivateFederationDeleteModal, handleDeleteFederation) => {
+            return (
+              <Fragment>
+                <h1>Change Federation Rules</h1>
+                <h1>{federationIdToChangeRules}</h1>openChangeFederationModal
+                <h1>FILL ME</h1>
+              </Fragment>
+            );
+        };
 
     dismissFederationLeaveSuccessAlert() {
         this.props.dismissAlert(DISMISS_FEDERATION_LEAVE_SUCCESS_ALERT)
@@ -127,16 +205,35 @@ class FederationList extends Component {
         this.props.dismissAlert(DISMISS_FEDERATION_INVITATION_SUCCESS_ALERT)
     }
 
+     dismissFederationChangeRulesSuccessAlert() {
+            this.props.dismissAlert(DISMISS_FEDERATION_CHANGE_RULES_SUCCESS_ALERT)
+     }
+
+       test = () =>{
+         alert("test");
+         console.log("testtest");
+       };
+
+
     render() {
         const { availableFederations, successfulFederationLeave, successfulFederationDeletion,
             successfulFederationInvitation, federationLeaveError, federationDeletionError,
             fetching_error } = this.props.federations;
-        const { federationIdToDelete } = this.props.federationDeleteModal;
-        const federationIdToLeave = this.props.federationLeaveModal.federationId;
-        const platformIdToLeave = this.props.federationLeaveModal.platformId;
+        const { federationIdToDelete }    = this.props.federationDeleteModal;
+        const federationIdToLeave         = this.props.federationLeaveModal.federationId;
+        const federationIdToLeaveWithVote = this.props.federationLeaveWithVoteModal.federationId;
+        const platformIdToLeaveWithVote   = this.props.federationLeaveWithVoteModal.platformId;
+        const platformIdToLeave           = this.props.federationLeaveModal.platformId;
+        console.log("federationIdToLeaveWithVote");
+        console.log(federationIdToLeaveWithVote);
         const availableUserFederations = this.props.userFederations;
         const { isAdmin } = this.props;
         const federations = isAdmin ? availableFederations : availableUserFederations;
+        ///////////////////////////////////////////////////////////////////////////////
+        console.log("888888888888888888888888888888888888888888888888");
+        console.log("availableUserFederations: ", this.props.userFederations);
+        console.log(this.props.userName);
+        //////////////////////////////////////////////////////////////////////////////
         {/*const federations = availableFederations;*/} {/*THIS WILL BE USED FOR JOIN TO FEDERATION ONLY*/}
 
         return(
@@ -157,12 +254,15 @@ class FederationList extends Component {
                     return (
                         <CollapsibleFederationPanel
                             key={federation.id}
-                            userPlatforms={this.props.userPlatforms}
-                            federation={federation}
-                            informationModels={this.props.informationModels}
-                            openLeaveModal={this.props.activateFederationLeaveModal}
-                            openDeleteModal={this.props.activateFederationDeleteModal}
-                            openInviteModal={this.props.activateFederationInviteModal}
+                            userPlatforms           = {this.props.userPlatforms}
+                            federation              = {federation}
+                            userName                = {this.props.userName}
+                            informationModels       = {this.props.informationModels}
+                            openLeaveModal          = {this.props.activateFederationLeaveModal}
+                            openLeaveWithVoteModal  = {this.props.activateFederationLeaveWithVoteModal}
+                            openDeleteModal         = {this.props.activateFederationDeleteModal}
+                            openInviteModal         = {this.props.activateFederationInviteModal}
+                            openChangeFederationRulesModal = {this.props.activateFederationChangeRulesModal}
                             isAdmin={isAdmin} />
                     )
                 })}
@@ -174,11 +274,23 @@ class FederationList extends Component {
                 }
 
                 {
-                    this.showFederationLeaveModal(federationIdToLeave, platformIdToLeave, federations,
+                   this.showFederationLeaveModal(federationIdToLeave, platformIdToLeave, federations,
                         this.props.deactivateFederationLeaveModal, this.handleLeaveFederation)
                 }
 
+                {
+                 this.showFederationLeaveWithVoteModal(federationIdToLeaveWithVote, platformIdToLeaveWithVote, federations,
+                                                       this.props.deactivateFederationLeaveWithVoteModal, this.handleLeaveFederationWithVote)
+
+                }
+
+
+
+
+
                 <FederationInviteModal />
+
+                <ChangeFederationRulesModal/>
 
             </Fragment>
         );
@@ -187,14 +299,19 @@ class FederationList extends Component {
 
 
 function mapStateToProps(state) {
+    console.log("getUserOrganizations(state)", getUserOrganizations(state));
     return {
         userPlatforms: state.userPlatforms.availablePlatforms,
         federations: state.federations,
         informationModels: state.informationModels,
         userFederations: getUserFederations(state),
+        userName:getUserName(state),
         federationDeleteModal: state.federationDeleteModal,
         federationLeaveModal: state.federationLeaveModal,
-        federationInviteModal: state.federationInviteModal
+        federationLeaveWithVoteModal: state.federationLeaveWithVoteModal,
+        federationInviteModal: state.federationInviteModal,
+
+        userOrganizationFederations:getUserOrganizations(state)
     };
 }
 
@@ -210,5 +327,9 @@ export default connect(mapStateToProps, {
     activateFederationLeaveModal,
     deactivateFederationLeaveModal,
     activateFederationInviteModal,
-    dismissAlert
+    activateFederationChangeRulesModal,
+    activateFederationLeaveWithVoteModal,
+    deactivateFederationLeaveWithVoteModal,
+    dismissAlert,
+    leaveFederationWithVote
 })(withRouter(FederationList));

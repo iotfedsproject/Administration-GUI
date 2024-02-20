@@ -68,23 +68,51 @@ class FederationRules extends Component {
          return(       <Fragment>
                           <form>
                           {/*<h4><strong> Update Federation Rules {federation.name}</strong></h4>*/}
-                          <h4><strong>{title}</strong></h4>
+
+                          {/*******************************************************/}
                            <div className="qos-constraint">
-                           <h3><strong>Federation rule types</strong></h3>
+
+                              <Row>
+                               <Col lg={6} md={6} sm={6} xs={6}>
+                               <h3><strong>Balance in FedCoins</strong></h3>
+                                <FormGroup controlId="BalanceId" style={{zIndex: "5"}}>
+                                    <FormControl
+                                      value={federation.balance}
+                                      disabled={true} />
+                                </FormGroup>
+                                </Col>
+                                <Col lg={6} md={6} sm={6} xs={6}>
+                                <h3><strong>Reputation</strong></h3>
+                                <FormGroup controlId="ReputationId" style={{zIndex: "5"}}>
+                                    <FormControl
+                                      value={federation.reputation}
+                                      disabled={true} />
+                                </FormGroup>
+                                </Col>
+                               </Row>
+                           </div>
+                          {/*******************************************************/}
+
+
+                          <h4><strong>{title}</strong></h4>
+
+                           <div className="qos-constraint">
+                           <h3><strong>Federation type</strong></h3>
                              <Row>
                               <Col lg={6} md={6} sm={6} xs={6}>
                                 <FormGroup controlId="RuleTypeId" style={{zIndex: "5"}}>
-                                  <ControlLabel>Rule Type</ControlLabel>
+                                  <ControlLabel>Members Type</ControlLabel>
                                   {readOnly ?
                                     <FormControl
-                                      value={federation.SmartContract.IoTFedsRules.FedTypeRules.Type}
+                                      value={federation.smartContract.IoTFedsRules.FedTypeRules.Type}
                                       disabled={true} />
                                     :
                                     <Field
                                        name="RuleTypeId"
-                                       label="Rule Type" placeholder="Select the type of rules"
+                                       label="Members Type" placeholder="Select the type of members"
                                        options={RULE_TYPES}
                                        component={RFReactSelect}
+
                                      />
                                      }
                                   {/* <HelpBlock>Mandatory</HelpBlock>*/}
@@ -94,15 +122,15 @@ class FederationRules extends Component {
 
                               <Col lg={6} md={6} sm={6} xs={6}>
                                  <FormGroup controlId="DataAvailabilityId" style={{zIndex: "5"}}>
-                                    <ControlLabel>Data Availability</ControlLabel>
+                                    <ControlLabel>Products Visibility</ControlLabel>
                                     {readOnly ?
                                       <FormControl
-                                      value={federation.SmartContract.IoTFedsRules.FedTypeRules.DataAvailability}
+                                      value={federation.smartContract.IoTFedsRules.FedTypeRules.DataAvailability}
                                       disabled={true} />
                                       :
                                      <Field
                                        name="DataAvailabilityId"
-                                       label="Data Availability" placeholder="Select the data availability"
+                                       label="Products Visibility" placeholder="Select the products visibility"
                                        options={DATA_AVAILABILITY}
                                        component={RFReactSelect}
                                       />
@@ -119,7 +147,7 @@ class FederationRules extends Component {
                                     {readOnly ? <ControlLabel>Service Type</ControlLabel>:""}
                                     {readOnly ?
                                     <FormControl
-                                     value={federation.SmartContract.IoTFedsRules.FedTypeRules.ServiceType}
+                                     value={federation.smartContract.IoTFedsRules.FedTypeRules.ServiceType}
                                      disabled={true}
                                      />
                                     :
@@ -141,7 +169,7 @@ class FederationRules extends Component {
 
                                      {readOnly ?
                                       <FormControl
-                                       value={federation.SmartContract.IoTFedsRules.FedTypeRules.SupportedOntologies}
+                                       value={federation.smartContract.IoTFedsRules.FedTypeRules.SupportedOntologies}
                                        disabled={true}
                                        />
                                       :
@@ -161,14 +189,15 @@ class FederationRules extends Component {
                                 </div>
 
                                 <div className="qos-constraint">
-                                <h3><strong>Federation government rules </strong></h3>
+                                <h3><strong>Federation Governance</strong></h3>
                                  <Row>
-                                  <Col lg={6} md={6} sm={6} xs={6}>
+                                  {/*<Col lg={6} md={6} sm={6} xs={6}>*/}
+                                  <Col lg={12} md={12} sm={12} xs={12}>
                                    <FormGroup controlId="BoardGovId" style={{zIndex: "5"}}>
                                     {readOnly ? <ControlLabel>Board Gov</ControlLabel>:""}
                                       {readOnly ?
                                       <FormControl
-                                       value={federation.SmartContract.IoTFedsRules.FedGov.BoardGov}
+                                       value={federation.smartContract.IoTFedsRules.FedGov.BoardGov}
                                        disabled={true}
                                        />
                                       :
@@ -183,13 +212,16 @@ class FederationRules extends Component {
                                   {/*<FieldError error={slaConstraints_comparator_error ? slaConstraints_comparator_error[index] : ""} />*/}
                                 </FormGroup>
                                </Col>
-
-                               <Col lg={6} md={6} sm={6} xs={6}>
+                               </Row>
+                               <Row>
+                               {/*<Col lg={6} md={6} sm={6} xs={6}>*/}
+                                 <Col lg={12} md={12} sm={12} xs={12}>
                                   <FormGroup controlId="proposalsId" style={{zIndex: "5"}}>
                                    {readOnly ? <ControlLabel>Proposals</ControlLabel>:""}
                                      {readOnly ?
                                      <FormControl
-                                     value={federation.SmartContract.IoTFedsRules.FedGov.Proposals}
+                                     componentClass="textarea"
+                                     value={federation.smartContract.IoTFedsRules.FedGov.Proposals}
                                      disabled={true}
                                     />
                                      :
@@ -213,7 +245,7 @@ class FederationRules extends Component {
                                   {readOnly ? <ControlLabel>Tokens</ControlLabel>:""}
                                     {readOnly ?
                                       <FormControl
-                                       value={federation.SmartContract.IoTFedsRules.FedGov.VoteRules.Tokens}
+                                       value={federation.smartContract.IoTFedsRules.FedGov.VoteRules.Tokens}
                                        disabled={true}
                                        />
                                       :
@@ -233,7 +265,7 @@ class FederationRules extends Component {
                                  <ControlLabel>Vote Rules Approval %</ControlLabel>
                                     {readOnly ?
                                       <FormControl
-                                       value={federation.SmartContract.IoTFedsRules.FedGov.VoteRules.Type.ApprovalPercentage}
+                                       value={federation.smartContract.IoTFedsRules.FedGov.VoteRules.Type.ApprovalPercentage}
                                        disabled={true}
                                        />
                                       :
@@ -257,7 +289,7 @@ class FederationRules extends Component {
                                  <ControlLabel>Vote Rules Base</ControlLabel>
                                   {readOnly ?
                                    <FormControl
-                                    value={federation.SmartContract.IoTFedsRules.FedGov.VoteRules.Type.Base}
+                                    value={federation.smartContract.IoTFedsRules.FedGov.VoteRules.Type.Base}
                                     disabled={true}
                                    />
                                   :
@@ -281,10 +313,9 @@ class FederationRules extends Component {
                           <Col lg={6} md={6} sm={6} xs={6}>
                             <FormGroup controlId="QosPercentage" style={{zIndex: "5"}}>
                               {readOnly ? <ControlLabel>Qos %</ControlLabel>:""}
-
                                {readOnly ?
                                  <FormControl
-                                  value={federation.SmartContract.IoTFedsRules.QualityAssurance.Metrics.QosPercentage}
+                                  value={federation.smartContract.IoTFedsRules.QualityAssuranceMetrics.QoSPercentage}
                                   disabled={true}
                                />
                                :
@@ -301,16 +332,16 @@ class FederationRules extends Component {
 
                         <Col lg={6} md={6} sm={6} xs={6}>
                           <FormGroup controlId="reputationPercentId" style={{zIndex: "5"}}>
-                            {readOnly ? <ControlLabel>Reputation %</ControlLabel>:""}
+                            {readOnly ? <ControlLabel>QoE %</ControlLabel>:""}
                              {readOnly ?
                               <FormControl
-                               value={federation.SmartContract.IoTFedsRules.QualityAssurance.Metrics.ReputationPercentage}
+                               value={federation.smartContract.IoTFedsRules.QualityAssuranceMetrics.ReputationPercentage}
                                disabled={true}
                               />
                             :
                           <Field
                             name="reputationPercentId"
-                            label = "Reputation %" placeholder="Insert the reputation %"
+                            label = "QoE %" placeholder="Insert the QoE %"
                             component={renderInputField}
                           />
                           }
@@ -321,17 +352,17 @@ class FederationRules extends Component {
 
                     <Col lg={6} md={6} sm={6} xs={6}>
                      <FormGroup controlId="MinValueFedId" style={{zIndex: "5"}}>
-                        {readOnly ? <ControlLabel>Min Number of Federations</ControlLabel>:""}
+                        {readOnly ? <ControlLabel>Min reputation value</ControlLabel>:""}
                          {readOnly ?
                           <FormControl
-                           value={federation.SmartContract.IoTFedsRules.QualityAssurance.Metrics.Quality.MinValueFed}
+                           value={federation.smartContract.IoTFedsRules.QualityAssuranceMetrics.Quality.MinValueFed}
                            disabled={true}
                          />
                         :
                        <Field
                         name="MinValueFedId"
-                        label = "Min Number of Federations" name="MinValueFedId" type="text"
-                        placeholder="Insert the minimum value fed"
+                        label = "Min reputation value" name="MinValueFedId" type="text"
+                        placeholder="Insert the minimum reputation value"
                         component={renderInputField}
                      />
                      }
@@ -342,16 +373,16 @@ class FederationRules extends Component {
 
                         <Col lg={6} md={6} sm={6} xs={6}>
                           <FormGroup controlId="UnderperformanceId" style={{zIndex: "5"}}>
-                            <ControlLabel>Under Performance</ControlLabel>
+                            <ControlLabel>Quality violation policy</ControlLabel>
                             {readOnly ?
                              <FormControl
-                              value={federation.SmartContract.IoTFedsRules.QualityAssurance.Metrics.Underperformance}
+                              value={federation.smartContract.IoTFedsRules.QualityAssuranceMetrics.UnderPerformance}
                               disabled={true}
                              />
                              :
                              <Field
                               name="UnderperformanceId"
-                              label="Under Performance" placeholder="Select the Under performance value"
+                              label="Quality violation policy" placeholder="Select the Quality violation policy"
                               options={UNDER_PERFORMANCE}
                               component={RFReactSelect}
                              />
@@ -362,7 +393,270 @@ class FederationRules extends Component {
                          </Col>
                         </Row>
                         </div>
+                        {/*/////////////////////////////////////////////////// */}
+                        <div className="qos-constraint">
+                          <h3><strong>Quality of Experience Weights</strong></h3>
+                          <Row>
+                          <Col lg={6} md={6} sm={6} xs={6}>
+                          <FormGroup controlId="businessEnablementId" style={{zIndex: "5"}}>
+                            {readOnly ? <ControlLabel>Business Enablement</ControlLabel>:""}
+                             {readOnly ?
+                              <FormControl
+                               value={federation.smartContract.IoTFedsRules.QualityAssuranceMetrics.QoEWeights.business_enablement}
+                               disabled={true}
+                              />
+                            :
+                          <Field
+                            name="businessEnablementId"
+                            label = "Business Enablement" placeholder="Insert the bussiness Enabled value"
+                            component={renderInputField}
+                          />
+                          }
+                      {/* <HelpBlock>Mandatory</HelpBlock>*/}
+                      {/*<FieldError error={slaConstraints_comparator_error ? slaConstraints_comparator_error[index] : ""} />*/}
+                    </FormGroup>
+                    </Col>
 
+                    <Col lg={6} md={6} sm={6} xs={6}>
+                     <FormGroup controlId="CompletenessId" style={{zIndex: "5"}}>
+                        {readOnly ? <ControlLabel>Completeness</ControlLabel>:""}
+                         {readOnly ?
+                          <FormControl
+                           value={federation.smartContract.IoTFedsRules.QualityAssuranceMetrics.QoEWeights.completeness}
+                           disabled={true}
+                         />
+                        :
+                       <Field
+                        name="CompletenessId"
+                        label = "Completeness"  type="text"
+                        placeholder="Insert the Completeness value"
+                        component={renderInputField}
+                     />
+                     }
+                    {/* <HelpBlock>Mandatory</HelpBlock>*/}
+                    {/*<FieldError error={slaConstraints_comparator_error ? slaConstraints_comparator_error[index] : ""} />*/}
+                     </FormGroup>
+                    </Col>
+               </Row>
+                   <Row>
+                          <Col lg={6} md={6} sm={6} xs={6}>
+                          <FormGroup controlId="CorrectnessId" style={{zIndex: "5"}}>
+                            {readOnly ? <ControlLabel>Correctness</ControlLabel>:""}
+                             {readOnly ?
+                              <FormControl
+                               value={federation.smartContract.IoTFedsRules.QualityAssuranceMetrics.QoEWeights.correctness}
+                               disabled={true}
+                              />
+                            :
+                          <Field
+                            name="CorrectnessId"
+                            label = "Correctness" placeholder="Insert the Correctness value"
+                            component={renderInputField}
+                          />
+                          }
+                      {/* <HelpBlock>Mandatory</HelpBlock>*/}
+                      {/*<FieldError error={slaConstraints_comparator_error ? slaConstraints_comparator_error[index] : ""} />*/}
+                    </FormGroup>
+                    </Col>
+
+                    <Col lg={6} md={6} sm={6} xs={6}>
+                     <FormGroup controlId="EasyOfUseId" style={{zIndex: "5"}}>
+                        {readOnly ? <ControlLabel>Ease Of Use</ControlLabel>:""}
+                         {readOnly ?
+                          <FormControl
+                           value={federation.smartContract.IoTFedsRules.QualityAssuranceMetrics.QoEWeights.ease_of_use}
+                           disabled={true}
+                         />
+                        :
+                       <Field
+                        name="EasyOfUseId"
+                        label = "Ease of Use"  type="text"
+                        placeholder="Insert the Ease of Use value"
+                        component={renderInputField}
+                     />
+                     }
+                    {/* <HelpBlock>Mandatory</HelpBlock>*/}
+                    {/*<FieldError error={slaConstraints_comparator_error ? slaConstraints_comparator_error[index] : ""} />*/}
+                     </FormGroup>
+                    </Col>
+               </Row>
+              <Row>
+                          <Col lg={6} md={6} sm={6} xs={6}>
+                          <FormGroup controlId="PrecisionId" style={{zIndex: "5"}}>
+                            {readOnly ? <ControlLabel>Precision</ControlLabel>:""}
+                             {readOnly ?
+                              <FormControl
+                               value={federation.smartContract.IoTFedsRules.QualityAssuranceMetrics.QoEWeights.precision}
+                               disabled={true}
+                              />
+                            :
+                          <Field
+                            name="PrecisionId"
+                            label = "Precision" placeholder="Insert the Precision value"
+                            component={renderInputField}
+                          />
+                          }
+                      {/* <HelpBlock>Mandatory</HelpBlock>*/}
+                      {/*<FieldError error={slaConstraints_comparator_error ? slaConstraints_comparator_error[index] : ""} />*/}
+                    </FormGroup>
+                    </Col>
+
+                    <Col lg={6} md={6} sm={6} xs={6}>
+                     <FormGroup controlId="RelevanceId" style={{zIndex: "5"}}>
+                        {readOnly ? <ControlLabel>Relevance</ControlLabel>:""}
+                         {readOnly ?
+                          <FormControl
+                           value={federation.smartContract.IoTFedsRules.QualityAssuranceMetrics.QoEWeights.relevance}
+                           disabled={true}
+                         />
+                        :
+                       <Field
+                        name="RelevanceId"
+                        label = "Relevance"  type="text"
+                        placeholder="Insert the Relevance value"
+                        component={renderInputField}
+                     />
+                     }
+                    {/* <HelpBlock>Mandatory</HelpBlock>*/}
+                    {/*<FieldError error={slaConstraints_comparator_error ? slaConstraints_comparator_error[index] : ""} />*/}
+                     </FormGroup>
+                    </Col>
+                  </Row>
+                    <Row>
+                          <Col lg={6} md={6} sm={6} xs={6}>
+                          <FormGroup controlId="ResponseTimeId" style={{zIndex: "5"}}>
+                            {readOnly ? <ControlLabel>Response Time</ControlLabel>:""}
+                             {readOnly ?
+                              <FormControl
+                               value={federation.smartContract.IoTFedsRules.QualityAssuranceMetrics.QoEWeights.response_time}
+                               disabled={true}
+                              />
+                            :
+                          <Field
+                            name="ResponseTimeId"
+                            label = "Response Time" placeholder="Insert the ResponseTime value"
+                            component={renderInputField}
+                          />
+                          }
+                      {/* <HelpBlock>Mandatory</HelpBlock>*/}
+                      {/*<FieldError error={slaConstraints_comparator_error ? slaConstraints_comparator_error[index] : ""} />*/}
+                    </FormGroup>
+                    </Col>
+
+                    <Col lg={6} md={6} sm={6} xs={6}>
+                     <FormGroup controlId="ValueForMoneyId" style={{zIndex: "5"}}>
+                        {readOnly ? <ControlLabel>Value For Money</ControlLabel>:""}
+                         {readOnly ?
+                          <FormControl
+                           value={federation.smartContract.IoTFedsRules.QualityAssuranceMetrics.QoEWeights.value_for_money}
+                           disabled={true}
+                         />
+                        :
+                       <Field
+                        name="ValueForMoneyId"
+                        label = "Value For Money"  type="text"
+                        placeholder="Insert the Value For Money value"
+                        component={renderInputField}
+                     />
+                     }
+                    {/* <HelpBlock>Mandatory</HelpBlock>*/}
+                    {/*<FieldError error={slaConstraints_comparator_error ? slaConstraints_comparator_error[index] : ""} />*/}
+                     </FormGroup>
+                    </Col>
+                   </Row>
+
+                   </div>
+                  <div className="qos-constraint">
+                    <h3><strong>Quality of Service Weights</strong></h3>
+
+                  <Row>
+                          <Col lg={6} md={6} sm={6} xs={6}>
+                          <FormGroup controlId="QualityOfservicePercentageId" style={{zIndex: "5"}}>
+                            {readOnly ? <ControlLabel>Quality Of Service %</ControlLabel>:""}
+                             {readOnly ?
+                              <FormControl
+                               value={federation.smartContract.IoTFedsRules.QualityAssuranceMetrics.QoSPercentage}
+                               disabled={true}
+                              />
+                            :
+                          <Field
+                            name="QualityOfservicePercentageId"
+                            label = "Quality Of Service %" placeholder="Insert the Quality Of Service % value"
+                            component={renderInputField}
+                          />
+                          }
+                      {/* <HelpBlock>Mandatory</HelpBlock>*/}
+                      {/*<FieldError error={slaConstraints_comparator_error ? slaConstraints_comparator_error[index] : ""} />*/}
+                    </FormGroup>
+                    </Col>
+
+                    <Col lg={6} md={6} sm={6} xs={6}>
+                     <FormGroup controlId="QosAvailabilityId" style={{zIndex: "5"}}>
+                        {readOnly ? <ControlLabel>Qos Availability</ControlLabel>:""}
+                         {readOnly ?
+                          <FormControl
+                           value={federation.smartContract.IoTFedsRules.QualityAssuranceMetrics.QoSWeights.availability}
+                           disabled={true}
+                         />
+                        :
+                       <Field
+                        name="QosAvailabilityId"
+                        label = "Qos Availability"  type="text"
+                        placeholder="Insert the Qos Availability value"
+                        component={renderInputField}
+                     />
+                     }
+                    {/* <HelpBlock>Mandatory</HelpBlock>*/}
+                    {/*<FieldError error={slaConstraints_comparator_error ? slaConstraints_comparator_error[index] : ""} />*/}
+                     </FormGroup>
+                    </Col>
+                   </Row>
+                     <Row>
+                          <Col lg={6} md={6} sm={6} xs={6}>
+                          <FormGroup controlId="QosPrecisionId" style={{zIndex: "5"}}>
+                            {readOnly ? <ControlLabel>Qos Precision</ControlLabel>:""}
+                             {readOnly ?
+                              <FormControl
+                               value={federation.smartContract.IoTFedsRules.QualityAssuranceMetrics.QoSWeights.precision}
+                               disabled={true}
+                              />
+                            :
+                          <Field
+                            name="QosPrecisionId"
+                            label = "Qos Precision" placeholder="Insert the Qos Precision value"
+                            component={renderInputField}
+                          />
+                          }
+                      {/* <HelpBlock>Mandatory</HelpBlock>*/}
+                      {/*<FieldError error={slaConstraints_comparator_error ? slaConstraints_comparator_error[index] : ""} />*/}
+                    </FormGroup>
+                    </Col>
+
+                    <Col lg={6} md={6} sm={6} xs={6}>
+                     <FormGroup controlId="QosResponseTimeId" style={{zIndex: "5"}}>
+                        {readOnly ? <ControlLabel>Qos Response Time</ControlLabel>:""}
+                         {readOnly ?
+                          <FormControl
+                           value={federation.smartContract.IoTFedsRules.QualityAssuranceMetrics.QoSWeights.response_time}
+                           disabled={true}
+                         />
+                        :
+                       <Field
+                        name="QosResponseTimeId"
+                        label = "Qos Response Time"  type="text"
+                        placeholder="Insert the Qos Response Time value"
+                        component={renderInputField}
+                     />
+                     }
+                    {/* <HelpBlock>Mandatory</HelpBlock>*/}
+                    {/*<FieldError error={slaConstraints_comparator_error ? slaConstraints_comparator_error[index] : ""} />*/}
+                     </FormGroup>
+                    </Col>
+                   </Row>
+                  </div>
+
+
+                        {/*/////////////////////////////////////////////////////*/}
                          <div className="qos-constraint">
                            <h3><strong>Marketplace policy</strong></h3>
                            <Row>
@@ -371,7 +665,7 @@ class FederationRules extends Component {
                                 <ControlLabel>Charge Policy</ControlLabel>
                                   {readOnly ?
                                      <FormControl
-                                      value={federation.SmartContract.IoTFedsRules.FedMarketplace.ChargePolicy}
+                                      value={federation.smartContract.IoTFedsRules.FedMarketplace.ChargePolicy}
                                       disabled={true}
                                       />
                                      :
@@ -391,7 +685,7 @@ class FederationRules extends Component {
                            <ControlLabel>Federation Product</ControlLabel>
                             {readOnly ?
                               <FormControl
-                               value={federation.SmartContract.IoTFedsRules.FedMarketplace.FedProduct}
+                               value={federation.smartContract.IoTFedsRules.FedMarketplace.FedProduct}
                                disabled={true}
                               />
                             :
@@ -412,16 +706,16 @@ class FederationRules extends Component {
                <Row>
                  <Col lg={6} md={6} sm={6} xs={6}>
                    <FormGroup controlId="ProfitPolicyId" style={{zIndex: "5"}}>
-                    <ControlLabel>Profit Policy</ControlLabel>
+                    <ControlLabel>Compensation Policy</ControlLabel>
                       {readOnly ?
                         <FormControl
-                         value={federation.SmartContract.IoTFedsRules.FedMarketplace.ProfitPolicy}
+                         value={federation.smartContract.IoTFedsRules.FedMarketplace.ProfitPolicy}
                          disabled={true}
                         />
                         :
                        <Field
                          name="ProfitPolicyId"
-                         label="Profit Policy" placeholder="Select the supported Profit Policy"
+                         label="Compensation Policy" placeholder="Select the compensation Policy"
                          options={PROFIT_POLICY}
                          component={RFReactSelect}
                       />
@@ -436,7 +730,7 @@ class FederationRules extends Component {
                      <ControlLabel>Coin</ControlLabel>
                      {readOnly ?
                         <FormControl
-                         value={federation.SmartContract.IoTFedsRules.FedMarketplace.Coin}
+                         value={federation.smartContract.IoTFedsRules.FedMarketplace.Coin}
                          disabled={true}
                         />
                       :
@@ -453,9 +747,56 @@ class FederationRules extends Component {
                   </FormGroup>
                 </Col>
               </Row>
+              {/*****************************************************************************************/}
+              <Row>
+             {/**************************************************************************************/}
+              <Col lg={6} md={6} sm={6} xs={6}>
+               <FormGroup controlId="FedMarketChargeId" style={{zIndex: "5"}}>
+                <ControlLabel>Federation Marketplace Charge</ControlLabel>
+                  {readOnly ?
+                   <FormControl
+                    value={federation.smartContract.IoTFedsRules.FedMarketplace.FedMarketCharge}
+                    disabled={true}
+                 />
+                  :
+                 <Field
+                  name="FedMarketChargeId"
+                  label="FedMarketChargeId"
+                  placeholder="Insert the Federation Market Charge"
+                  component={renderInputField}
+                  />
+                 }
+                </FormGroup>
+              </Col>
+
+              <Col lg={6} md={6} sm={6} xs={6}>
+               <FormGroup controlId="GlobalMarketChargeId" style={{zIndex: "5"}}>
+                <ControlLabel>Global Marketplace Charge</ControlLabel>
+                  {readOnly ?
+                   <FormControl
+                    value={federation.smartContract.IoTFedsRules.FedMarketplace.GlobalMarketCharge}
+                    disabled={true}
+                 />
+                  :
+                 <Field
+                  name="GlobalMarketChargeId"
+                  label="GlobalMarketChargeId"
+                  placeholder="Insert the Global Market Charge"
+                  component={renderInputField}
+                  />
+                 }
+              </FormGroup>
+             </Col>
+            {/**************************************************************************************/}
+           </Row>
+
+              {/*****************************************************************************************/}
 
 
            </div>
+            {/*//////////////////////////////////////////////////////*/}
+
+            {/*///////////////////////////////////////////////////////*/}
              {readOnly?
                <h1></h1>
               :

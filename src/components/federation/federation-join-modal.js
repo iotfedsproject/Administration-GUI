@@ -6,6 +6,7 @@ const FederationJoinModal = ({ federation, modalOpen, closeModal, handleJoinFede
     // This function is used in order to preserve the animation on closing the modal
     const modalContent = () => {
         return(
+
             federation ?
                 <Fragment>
                     <Modal.Header closeButton>

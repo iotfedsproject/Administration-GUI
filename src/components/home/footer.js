@@ -6,7 +6,7 @@ import {Col, Row} from "react-bootstrap";
 
 const Footer = () => {
     return (
-        <div className="footer">
+        <div className="footer" style={{backgroundColor: "#2b567c"}}>
             <Row>
                 <Col xs={12} sm={6} md={3} lg={3}>
                     <a className="external symbiote" href="http://www.symbiote-h2020.eu/">

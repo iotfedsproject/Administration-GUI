@@ -6,7 +6,10 @@ import {
     DISMISS_FEDERATION_DELETION_SUCCESS_ALERT, DISMISS_FEDERATION_DELETION_ERROR_ALERT,
     DISMISS_FEDERATION_INVITATION_SUCCESS_ALERT, DISMISS_FEDERATION_INVITATION_ERROR_ALERT,
     DISMISS_HANDLE_FEDERATION_INVITATION_SUCCESS_ALERT, DISMISS_HANDLE_FEDERATION_INVITATION_ERROR_ALERT,
-    REMOVE_FEDERATION_REGISTRATION_ERRORS,JOIN_FEDERATION,DISMISS_FEDERATION_JOIN_SUCCESS_ALERT,DISMISS_FEDERATION_JOIN_ERROR_ALERT
+    REMOVE_FEDERATION_REGISTRATION_ERRORS,JOIN_FEDERATION,DISMISS_FEDERATION_JOIN_SUCCESS_ALERT,DISMISS_FEDERATION_JOIN_ERROR_ALERT,
+    CHANGE_FEDERATION_RULES,DISMISS_FEDERATION_CHANGE_RULES_ERROR_ALERT, DISMISS_FEDERATION_CHANGE_RULES_SUCCESS_ALERT,
+    LEAVE_FEDERATION_WITH_VOTE
+
 } from "../../actions";
 import { ROOT_URL } from "../../configuration";
 
@@ -21,6 +24,45 @@ export default function(state = {}, action) {
                 console.log("else");
                 return {...state, availableFederations :  _.mapKeys(action.payload.data, "id")};
             }
+        case CHANGE_FEDERATION_RULES:
+        console.log("----------- CHANGE_FEDERATION_RULES---------------");
+        console.log(action.payload);
+        if (action.error){
+
+         console.log("action.error");
+         console.log(action.error);
+
+           if (action.payload.response && action.payload.response.data.error){
+            console.log(action.payload.response);
+            const message = action.payload.response.data.error;
+            console.log(message);
+
+             return {
+                 ...removeErrors(state),
+                 federationRulesUpdateError: message
+                 };
+
+           }else{
+           return {
+              ...removeErrors(state),
+              federationRulesUpdateError: "Network Error: Could not contact server"
+             };
+           }
+
+        }else{
+           if (action.payload.data.message){
+             console.log("if action.payload.data.message");
+             const message = action.payload.data.message;
+             console.log(message);
+             return {
+                ...removeErrors(state),
+                federationRulesUpdateSuccessful: message
+             };
+         }
+        }
+
+        return state;
+        break;
         case REGISTER_FEDERATION:
             if (action.error) {
 
@@ -158,6 +200,53 @@ export default function(state = {}, action) {
                     };
                 }
             }
+ case LEAVE_FEDERATION_WITH_VOTE :
+            if (action.error) {
+                let newState = _.omit(state, "successfulFederationLeave");
+
+                if (action.payload.response) {
+                    const { data } = action.payload.response;
+                    const message = data.error ? data.error : data;
+                    return {  ...removeErrors(newState), federationLeaveError : message };
+                } else {
+                    return { ...removeErrors(newState), federationLeaveError: "Network Error: Could not contact server"};
+                }
+            }
+            else {
+                const pattern = new RegExp(`${ROOT_URL}$`);
+
+                if (pattern.test(action.payload.request.responseURL))
+                    return state;
+                else {
+                    const federationId   = action.payload.config.data.get("federationId");
+                    const platformId     = action.payload.config.data.get("platformId");
+
+
+                    const { status } = action.payload;
+                    let successfulFederationLeave = "";
+                    let newState = _.omit(state, "federationLeaveError");
+                    let newAvailableFederation = { };
+
+                    if (status === 200) {
+                        successfulFederationLeave = `The organization  "${platformId}" will leave the federation "${federationId}" after voting!
+                        Check voting results in Voting Results page.`;
+                        newAvailableFederation = {
+                            ...state.availableFederations,
+                            [federationId]: action.payload.data[federationId]
+                        };
+                    } else if (status === 204) {
+                        successfulFederationLeave = `The federation "${federationId}" was deleted, since platform `
+                            + `"${platformId}" was the only platform left in the federation`;
+                        newAvailableFederation = _.omit(state.availableFederations, federationId);
+                    }
+
+                    return {
+                        ...removeErrors(newState),
+                        //availableFederations : newAvailableFederation,
+                        successfulFederationLeave
+                    };
+                }
+            }
         case JOIN_FEDERATION:
 
         if (action.error) {
@@ -238,17 +327,21 @@ export default function(state = {}, action) {
                 if (pattern.test(action.payload.request.responseURL))
                     return state;
                 else {
+                    console.log("action.payload.response.data",{...state});
                     const invitationRequest = JSON.parse(action.payload.config.data);
                     const id =  invitationRequest["federationId"];
                     const response = JSON.parse(action.payload.request.response);
                     const federation = response[id];
                     const successfulFederationInvitation = `Invitation to federation "${id}" was successful!`;
 
+                    console.log("action.payload.response.data",response);
+
                     let newFederations = {
                         ...state.availableFederations,
                         [id] : federation
                     };
 
+                    console.log("action.payload.response.data",INITIAL_STATE);
                     return {
                         ...removeErrors(state),
                         availableFederations : newFederations,
@@ -295,6 +388,11 @@ export default function(state = {}, action) {
                     };
                 }
             }
+        case DISMISS_FEDERATION_CHANGE_RULES_ERROR_ALERT:
+          return _.omit(state, "federationRulesUpdateError");//mxar
+        case DISMISS_FEDERATION_CHANGE_RULES_SUCCESS_ALERT:
+           return _.omit(state, "federationRulesUpdateSuccessful");//mxar
+
         case DISMISS_FEDERATION_REGISTRATION_SUCCESS_ALERT:
             return _.omit(state, "successfulFederationRegistration");
         case DISMISS_FEDERATION_REGISTRATION_ERROR_ALERT:
@@ -332,7 +430,7 @@ const removeErrors = (state) => {
         "qosConstraints_comparator_error", "qosConstraints_threshold_error",
         "qosConstraints_duration_error", "federationRegistrationError",
         "federationLeaveError", "federationDeletionError", "federationInvitationError",
-        "handleFederationInvitationError","federationJoinError"
+        "handleFederationInvitationError","federationJoinError","federationRulesUpdateError"
     ];
 
     let newState = {...state};

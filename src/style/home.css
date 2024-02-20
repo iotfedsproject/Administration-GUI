@@ -200,3 +200,8 @@ ol li p {
     /*top: -1px;*/
     /*margin-bottom:0*/
 /*}*/
+
+.my-modal {
+    width: 80vw ;   /* Occupy the 80% of the screen width */
+    max-width: 80vw;
+}

@@ -22,6 +22,7 @@ export default class CollapsibleFederationPanel extends Component {
         this.togglePanel = this.togglePanel.bind(this);
         this.handleOpenDeleteModal = this.handleOpenDeleteModal.bind(this);
         this.handleOpenInviteModal = this.handleOpenInviteModal.bind(this);
+        this.handleChangeFederationRulesModal = this.handleChangeFederationRulesModal.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -45,6 +46,28 @@ export default class CollapsibleFederationPanel extends Component {
         this.props.openInviteModal(this.props.federation.id);
     };
 
+    handleChangeFederationRulesModal = () => {
+         console.log("handleChangeFederationRulesModal");
+         console.log(this.props.federation.id);
+         console.log(this.props.federation.smartContract.IoTFedsRules.FedGov.BoardGov);
+         this.props.openChangeFederationRulesModal(
+         this.props.federation.id,
+         this.props.federation,
+         this.props.federation.smartContract.IoTFedsRules.FedTypeRules,
+         this.props.federation.smartContract.IoTFedsRules.FedGov.BoardGov,
+         this.props.federation.smartContract.IoTFedsRules.FedGov.Proposals,
+         this.props.federation.smartContract.IoTFedsRules.FedGov.VoteRules,
+         this.props.federation.smartContract.IoTFedsRules.FedGov.VoteRules.Type,
+         this.props.federation.smartContract.IoTFedsRules.QualityAssuranceMetrics,
+         /////this.props.federation.smartContract.IoTFedsRules.QualityAssuranceMetrics,
+         this.props.federation.smartContract.IoTFedsRules.QualityAssuranceMetrics.Quality,
+         this.props.federation.smartContract.IoTFedsRules.QualityAssuranceMetrics.QoEWeights,
+         this.props.federation.smartContract.IoTFedsRules.QualityAssuranceMetrics.QoSWeights,
+         this.props.federation.smartContract.IoTFedsRules.FedMarketplace);
+            //this.props.openInviteModal(this.props.federation.id);
+            //{this.open.bind(this)}
+    };
+
     render() {
         const { federation, userPlatforms } = this.state;
         const { isAdmin } = this.props;
@@ -63,8 +86,10 @@ export default class CollapsibleFederationPanel extends Component {
                         federation={federation}
                         userPlatforms={userPlatforms}
                         availableInfoModels={this.props.informationModels.availableInfoModels}
+                        userName = {this.props.userName}
                         isAdmin={isAdmin}
-                        onOpenLeaveModal={this.props.openLeaveModal}
+                        onOpenLeaveModal         = {this.props.openLeaveModal}
+                        onOpenLeaveWithVoteModal = {this.props.openLeaveWithVoteModal}
                     />
 
                 </Panel.Collapse>
@@ -74,6 +99,14 @@ export default class CollapsibleFederationPanel extends Component {
                         onClick={this.handleOpenInviteModal}>
                         Invite
                     </Button>
+                    <span></span>
+                <h1></h1>
+                <Button
+
+                    bsStyle="info"
+                    onClick={this.handleChangeFederationRulesModal}>
+                    Change Federation Rules
+                </Button>
                     {!isAdmin && federation.members.length !== 1 ? "" :
                         <Button
                             className="panel-footer-btn"
@@ -83,6 +116,7 @@ export default class CollapsibleFederationPanel extends Component {
                         </Button>
                     }
                 </Panel.Footer>
+
             </Panel>
         );
     }

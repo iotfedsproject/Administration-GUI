@@ -21,6 +21,23 @@ export function validatePlatformIds(values) {
     return null;
 }
 
+export function validateValue(values) {
+    const errors = [];
+    if (values) {
+        values.forEach((valueObject, valueIndex) => {
+        console.log(valueObject);
+        if(valueObject !== undefined){
+         console.log("IS DEFINED");
+        }else{
+         console.log("IS UNDEFINED");
+         errors[valueIndex] = "Add valid value";
+        }
+      });
+        return errors;
+    }
+    return null;
+}
+
 function validatePlatformId(value) {
     const pattern = new RegExp('^[\\w-]{4,}$');
 
@@ -54,7 +71,53 @@ export function validateOrganizations(values) {
         return errors;
     }
     return null;
+}//end
+//---------------------------------------------------------------------------------
+export function validateProposals(values) {
+     const errors = [];
+
+       if (values) {
+           values.forEach((platformObject, platformIndex) => {
+               const { platformId } = platformObject;
+               const platformIdError = {};
+               platformIdError.platformId = validateProposal(platformId);
+               errors[platformIndex] = platformIdError;
+           });
+           return errors;
+       }
+       return null;
+}//end
+//-----------------------------------------------------------------------
+ function validateProposal(value) {
+
+    console.log("value = ", value);
+
+    if (!value)
+        return "Please, enter a valid proposal";
+
+    const isEmptyResult = isNotEmpty(value);
+
+    if (isEmptyResult)
+         return isEmptyResult;
+
+    console.log("value = ", value);
+
+    var proposalsArray = ["ChangeRule","DeleteFed","InviteMember","JoinRequest","RequestRemove"];
+
+    var result = proposalsArray.includes(value);
+
+    console.log("value , result = ", result);
+
+    if(result) {
+      return null;
+    }else{
+      return "Proposal must be one of the following: ChangeRule,DeleteFed,InviteMember,JoinRequest,RequestRemove.";
+    }
+
+   return null;
 }
+
+//-----------------------------------------------------------------------
 
 function validateOrganization(value) {
     const pattern = new RegExp('^[\\w-]{4,}$');
@@ -97,6 +160,7 @@ export function validateDuration(value) {
     return null;
 }
 
+
 export function validateQoSConstraints(values) {
     const errors = [];
 
@@ -116,3 +180,36 @@ export function validateQoSConstraints(values) {
     }
     return null;
 }
+
+export function validateQofEsWeights(value) {
+    if (!value)
+        return null;
+
+    if (isNaN(value))
+        return "This is not a valid quality of experience weight";
+
+    if (value < 0)
+            return "This is not a valid quality of experience weight";
+
+    if (value > 1)
+        return "This is not a valid quality of experience weight";
+
+    return null;
+}
+
+export function validatePercent(value) {
+    if (!value)
+        return null;
+
+    if (isNaN(value))
+        return "This is not a valid of Quality of service";
+
+    if (value < 0)
+            return "This is not a valid of Quality of service";
+
+    if (value > 100)
+        return "This is not a valid of Quality of service";
+
+    return null;
+}
+

@@ -158,6 +158,28 @@ export const getFieldsForPermissionsUpdate = createSelector(
     }
 );
 
+export const xxgetUserFederations = createSelector(
+    [ getUserPlatforms, getFederations],
+    (userPlatforms, federations) => {
+
+        return _.mapKeys(_.filter(federations,
+            federation => {
+                const platformIds = federation.members.map(member => member.platformId);
+                return _.intersection(_.keysIn(userPlatforms), platformIds).length > 0;
+            }), "id");
+    }
+);
+
+export const getUserName = createSelector(
+       [ getUserDetails ],
+        (userDetails) => {
+         console.log(userDetails.username );
+         return userDetails.username;
+       }
+   );
+
+
+
 export const getUserFederations = createSelector(
     [ getUserPlatforms, getFederations ],
     (userPlatforms, federations) => {
@@ -165,6 +187,28 @@ export const getUserFederations = createSelector(
             federation => {
                 const platformIds = federation.members.map(member => member.platformId);
                 return _.intersection(_.keysIn(userPlatforms), platformIds).length > 0;
+            }), "id");
+    }
+);
+//------------------------------------------------------------------------------------
+export const getUserOrganizations = createSelector(
+    [ getUserPlatforms, getFederations,getUserDetails],
+    (userPlatforms, federations,userDetails) => {
+
+       let feds = [];
+
+        return _.mapKeys(_.filter(federations,
+            federation => {
+                console.log(federation.organizationMembers);
+
+                const organizations = federation.organizationMembers;
+                const userName      = userDetails.username;
+
+                if(organizations.indexOf(userName) > -1){
+                  feds.push(federation);
+                }
+                console.log("Found",feds);
+                return feds;
             }), "id");
     }
 );

@@ -6,11 +6,12 @@ axios.defaults.withCredentials = true;
 
 
 export function fetchJoinPendingRequests() {
-    const url = `${ROOT_URL}/user/cpanel/list_pending_join_requests`;
+    //const url = `${ROOT_URL}/federation_vote_request/pending`;
+    const url = `${ROOT_URL}/federation_vote_request/all`;
 
     const config = {
         url: url,
-        method: 'post',
+        method: 'get',
         headers: headers
     };
 

@@ -8,11 +8,12 @@ import SSPDetails from "./tabs/ssps-tab"
 import InformationModels from "./tabs/information-models-tab";
 import NavItemDropDown from "../admin-cpanel/nav-item-dropdown";
 import FederationDetails from "./tabs/federations-tab";
+import FederationMarketPlaceDetails from "./tabs/federated-marketplaces-tab";
 import FederationJoinDetails from "./tabs/federation-join-tab";
 import ModifyFederationRulesDetails from "./tabs/modify-federation-rules-tab";
 import FederationInvitationDetails from "./tabs/federation-invitations-tab";
 import {connect} from "react-redux";
-import {SERVICE_OWNER} from "../../configuration/roles";
+import {SERVICE_OWNER,USER} from "../../configuration/roles";
 import _ from "lodash";
 import MyMappings from "./tabs/my-mappings-tab";
 import AllMappings from "./tabs/all-mappings-tab";
@@ -23,8 +24,14 @@ class Main extends Component {
     constructor() {
         super();
         this.state = { hasFederationsDropDownActiveChild: false };
-        this.activateFederationsChild = this.activateFederationsChild.bind(this);
-        this.activateMappingsChild = this.activateMappingsChild.bind(this);
+        this.activateFederationsChild    = this.activateFederationsChild.bind(this);
+        this.activateMappingsChild       = this.activateMappingsChild.bind(this);
+        this.activateIoTMarketPlaceChild = this.activateIoTMarketPlaceChild.bind(this);
+
+        this.ioTMarketPlaceDropDownList = {
+         "fed-marketplaces" : "Federated MarketPlaces",
+         "global-marketplace" : "Global Marketplace"
+        };
 
         this.federationDropDownList = {
             "federation-invitations" : "Federation Invitations",
@@ -65,8 +72,15 @@ class Main extends Component {
         })
     };
 
+    activateIoTMarketPlaceChild = () => {
+        this.setState({
+            ..._.mapValues(this.state, () => false),
+            hasIoTMarketPlaceDropDownActiveChild: true
+        })
+    };
+
     navigation = (role) => {
-     role = SERVICE_OWNER; {/*TODO mxar remove it*/}
+      {/* role = SERVICE_OWNER; TODO mxar remove it*/}
         return role === SERVICE_OWNER ?
             <Nav bsStyle="pills" stacked className="sidebar panel-primary shadow">
                 <NavItem eventKey="user-details" onSelect={this.handleSelect}>
@@ -88,7 +102,7 @@ class Main extends Component {
                 <NavItem eventKey="ssp-details" onSelect={this.handleSelect}>
                     SSP Details
                 </NavItem>
-                <NavItem eventKey="information-models" onSelect={this.handleSelect}>
+                <NavItem  eventKey="information-models" onSelect={this.handleSelect}>
                     Information Models
                 </NavItem>
                 <NavItemDropDown
@@ -105,7 +119,16 @@ class Main extends Component {
                     activateChild={this.activateFederationsChild}
                     dropDownList={this.federationDropDownList}
                 />
-            </Nav> :
+            {/*     <NavItemDropDown */}
+              {/*      itemId="marketplace-dropdown"*/}
+              {/*      title="IoT MarketPlace"*/}
+              {/*      hasActiveChild={this.state.hasIoTMarketPlaceDropDownActiveChild}*/}
+               {/*     activateChild={this.activateIoTMarketPlaceChild}*/}
+                {/*    dropDownList={this.ioTMarketPlaceDropDownList}*/}
+               {/* />*/}
+
+            </Nav>
+             :
             <Nav bsStyle="pills" stacked className="sidebar panel-primary shadow">
                 <NavItem eventKey="user-details" onSelect={this.handleSelect}>
                     User Details
@@ -116,6 +139,9 @@ class Main extends Component {
                 <NavItem eventKey="pending-join-requests" onSelect={this.handlePendingJoinRequestSelect}>
                    Voting Results{/*TODO check if it must be in SERVICE OWNER Fragment*/}
                 </NavItem>
+
+
+
              {/*   <NavItem eventKey="federation-join-requests" onSelect={this.handlePendingJoinRequestSelect }>
                   Join to Federation {/*update*/}
               {/*  </NavItem> */}
@@ -123,7 +149,7 @@ class Main extends Component {
     };
 
     tabsContent = (role, username) => {
-      role = SERVICE_OWNER; {/*TODO mxar remove it*/}
+       {/*role = SERVICE_OWNER; TODO mxar remove it*/}
         return (
             <Tab.Content animation className="clearfix">
                 <Tab.Pane eventKey="user-details">
@@ -167,9 +193,7 @@ class Main extends Component {
                         <Tab.Pane eventKey="federation-join">
                           <FederationJoinDetails/>
                         </Tab.Pane>
-                      {/*  <Tab.Pane eventKey="modify-federation-rules">*/}
-                         {/*<ModifyFederationRulesDetails/>*/}
-                        {/*</Tab.Pane>*/}
+
 
 
                     </Fragment> : ""
@@ -179,7 +203,11 @@ class Main extends Component {
     };
 
     render() {
+        /////////////////////////////////////////////
+       {/*this.props.userDetails.role = SERVICE_OWNER; this.props.userDetails.username = "icom2";*/}
+
         const { role, username } = this.props.userDetails;
+
         return(
             <div className="main cpanel">
                 <div className="container">

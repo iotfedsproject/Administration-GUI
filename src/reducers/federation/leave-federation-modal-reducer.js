@@ -3,6 +3,7 @@ import { ACTIVATE_FEDERATION_LEAVE_MODAL, DEACTIVATE_FEDERATION_LEAVE_MODAL } fr
 const INITIAL_STATE = { federationId : "", platformId : "" };
 
 export default function(state = INITIAL_STATE, action) {
+    console.log("---- leave-federation-modal-reducer.js ----------");
     switch(action.type) {
         case ACTIVATE_FEDERATION_LEAVE_MODAL:
             const { federationId, platformId } = action.payload;

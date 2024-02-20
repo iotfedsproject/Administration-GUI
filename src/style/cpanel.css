@@ -4,6 +4,10 @@ body {
     background-color: rgb(252,252,252);
     color: rgb(102,102,102);
     font-family: "PT Sans Narrow",sans-serif;
+    background-image: url("../images/iot2.jpg");
+    background-position: center;
+    background-repeat:no-repeat;
+    background-size:cover;
 }
 
 a {

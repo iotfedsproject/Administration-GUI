@@ -33,11 +33,15 @@ import {
 import { ROOT_URL } from "../../configuration";
 import { USER_LOGIN_MODAL } from "../../reducers/modal/modal-reducer";
 import { getUserFederations } from "../../selectors";
+import { getUserName } from "../../selectors";
+
 
 class FederationToJoinList extends Component {
 
     constructor() {
         super();
+
+
 
         //this.handleDeleteFederation = this.handleDeleteFederation.bind(this);
         this.handleLeaveFederation = this.handleLeaveFederation.bind(this);
@@ -126,7 +130,9 @@ class FederationToJoinList extends Component {
 
     showFederationJoinModal = (federationIdToJoin, availableFederations,
                                  deactivateFederationJoinModal, handleJoinFederation) => {
-                               //alert("jksjdsjk");
+        console.log("availableFederations",availableFederations);
+        console.log("federationIdToJoin",federationIdToJoin );
+
         return (
             availableFederations ?
                 <FederationJoinModal
@@ -177,7 +183,8 @@ class FederationToJoinList extends Component {
         const availableUserFederations = this.props.userFederations;
         const { isAdmin } = this.props;
         {/*const federations = isAdmin ? availableFederations : availableUserFederations;*/}
-        const federations = availableFederations;
+        const federations = _.filter(availableFederations,x => !_.includes(availableUserFederations,x));
+
 
         return(
             <Fragment>
@@ -204,6 +211,7 @@ class FederationToJoinList extends Component {
                             key={federation.id}
                             userPlatforms={this.props.userPlatforms}
                             federation={federation}
+                            userName  = {this.props.userName}
                             informationModels={this.props.informationModels}
                             //openLeaveModal={this.props.activateFederationLeaveModal}
                             //openDeleteModal={this.props.activateFederationDeleteModal}
@@ -217,8 +225,7 @@ class FederationToJoinList extends Component {
                     this.showFederationDeleteModal(federationIdToDelete, federations,
                         this.props.deactivateFederationDeleteModal, this.handleDeleteFederation)
                         */
-                  /* TODO add the       this.handleJoinFederation parameter in the  this.showFederationJoinModal*/
-                  this.showFederationJoinModal(federationIdToJoin,federations,this.props.deactivateFederationJoinModal,this.handleJoinFederation)
+                  this.showFederationJoinModal(federationIdToJoin,availableFederations,this.props.deactivateFederationJoinModal,this.handleJoinFederation)
 
                   /* this.showFederationJoinModal(federationIdToDelete, federations,
                        this.props.deactivateFederationDeleteModal, this.handleDeleteFederation)
@@ -226,8 +233,8 @@ class FederationToJoinList extends Component {
                 }
 
                 {
-                    this.showFederationLeaveModal(federationIdToLeave, platformIdToLeave, federations,
-                        this.props.deactivateFederationLeaveModal, this.handleLeaveFederation)
+                   // this.showFederationLeaveModal(federationIdToLeave, platformIdToLeave, federations,
+                    //    this.props.deactivateFederationLeaveModal, this.handleLeaveFederation)
                 }
 
               {/*  <FederationJoinModal />*/}
@@ -247,7 +254,8 @@ function mapStateToProps(state) {
        // federationDeleteModal: state.federationDeleteModal,<-- caused the problem
         federationLeaveModal: state.federationLeaveModal,
         federationInviteModal: state.federationInviteModal,
-        federationJoinModal: state.federationJoinModal
+        federationJoinModal: state.federationJoinModal,
+        userName:getUserName(state)
     };
 }
 

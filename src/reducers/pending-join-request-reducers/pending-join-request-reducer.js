@@ -15,7 +15,7 @@ export default function(state = {}, action) {
     if (action.error)
         return { ...INITIAL_STATE, fetching_error : `${action.payload.message}: Could not fetch the pending of join requests list`};
      else{
-       return {...state, availablePendingJoinRequest :  _.mapKeys(action.payload.data, "federationId")};
+       return {...state, availablePendingJoinRequest :  _.mapKeys(action.payload.data, "votingId")};
        //return state;//
     }
     //return state;

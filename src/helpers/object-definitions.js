@@ -47,19 +47,130 @@ export function InformationModel(id, uri, name, owner, rdf, rdfFormat) {
     this.rdfFormat = rdfFormat;
 }
 
-export function Federation(id, name, isPublic, informationModel, slaConstraints, members) {
+export function Federation(id, name, isPublic, informationModel, slaConstraints, members, smartContract) {
     this.id = id;
     this.name = name;
     this.public = isPublic;
     this.informationModel = informationModel;
     this.slaConstraints = slaConstraints;
     this.members = members;
+    this.smartContract = smartContract;
+}
+
+export function FederationToUpdate(id, name, isPublic, informationModel, slaConstraints, members, openInvitations,smartContract) {
+    this.id = id;
+    this.name = name;
+    this.public = isPublic;
+    this.informationModel = informationModel;
+    this.slaConstraints = slaConstraints;
+    this.members = members;
+    this.openInvitations = openInvitations;
+    this.smartContract   = smartContract;
+}
+
+
+
+export function SmartContract(ioTFedsRules){
+  this.IoTFedsRules = ioTFedsRules;
+}
+
+export function IoTFedsRules(fedGov,fedMarketplace,fedTypeRules,qualityAssuranceMetrics){
+  this.FedGov                  = fedGov;
+  this.FedMarketplace          = fedMarketplace;
+  this.FedTypeRules            = fedTypeRules;
+  this.QualityAssuranceMetrics = qualityAssuranceMetrics;
+}
+
+export function FedGov(boardGov,proposals,voteRules){
+  this.BoardGov  = boardGov;
+  this.Proposals = proposals;
+  this.VoteRules = voteRules;
+}
+
+export function BoardGov(user){
+  this.user = user;
+}
+
+export function Proposals(proposal){
+  this.proposal = proposal;
+}
+
+export function VoteRules(tokens,type){
+ this.Tokens = tokens;
+ this.Type   = type;
+}
+
+export function Type(approvalPercentage,base){
+ this.ApprovalPercentage = approvalPercentage;
+ this.Base   = base;
+}
+
+export function FedMarketplace(chargePolicy,coin,fedProduct,profitPolicy,fedMarketCharge,globalMarketCharge){
+ this.ChargePolicy = chargePolicy;
+ this.Coin         = coin;
+ this.FedProduct   = fedProduct;
+ this.ProfitPolicy = profitPolicy;
+ this.FedMarketCharge = fedMarketCharge;
+ this.GlobalMarketCharge = globalMarketCharge;
+}
+
+export function FedTypeRules(dataAvailability,serviceType,supportedOntologies,type){
+ this.DataAvailability    = dataAvailability;
+ this.ServiceType         = serviceType;
+ this.SupportedOntologies = supportedOntologies;
+ this.Type = type;
 }
 
 export function FederationMember(platformId, interworkingServiceURL) {
     this.platformId = platformId;
     this.interworkingServiceUrl = interworkingServiceURL;
 }
+
+export function  QualityExpWeights(businessEnablement,completeness,correctness,easyOfUse,precision,relevance,responseTime,valueForMoney){
+  this.business_enablement = businessEnablement;
+  this.completeness    = completeness;
+  this.correctness     = correctness;
+  this.ease_of_use     = easyOfUse;
+  this.precision       = precision;
+  this.relevance       = relevance;
+  this.response_time   = responseTime;
+  this.value_for_money = valueForMoney;
+}
+
+
+ export function   QualityOfServicesWeights(availability, precision,responseTime){
+   this.availability  = availability;
+   this.precision     = precision;
+   this.response_time = responseTime;
+ }
+
+
+
+
+
+export function Metrics(qosPercentage,quality){
+  this.QosPercentage = qosPercentage;
+  this.Quality       = quality;
+}
+
+export function Quality(minValueFed){
+ this.MinValueFed = minValueFed;
+}
+export function QualityAssurance(metrics,reputationPercentage,underPerformance){
+   this.Metrics              = metrics;
+   this.ReputationPercentage = reputationPercentage;
+   this.UnderPerformance     = underPerformance;
+}
+
+export function QualityAssuranceMetrics(qualityExpWeights,qosPercentage,qualityOfServicesWeights,quality,reputationPercentage ,underPerformance){
+   this.QoEWeights     = qualityExpWeights;
+   this.QoSPercentage  = qosPercentage;
+   this.QoSWeights     = qualityOfServicesWeights;
+   this.Quality        = quality;
+   this.ReputationPercentage = reputationPercentage;
+   this.UnderPerformance     = underPerformance;
+}
+
 
 export function Permissions(usernamePermission, emailPermission, publicKeysPermission, jwtPermission) {
     this.usernamePermission = usernamePermission;

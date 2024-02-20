@@ -40,8 +40,27 @@ export function fetchServerInfo() {
 }
 
 export function registerUser(userInfo, cb) {
-    const url = `${ROOT_URL}/register`;
+    const url = `${ROOT_URL}/registerUser`; //was /register
     const formData = new FormData();
+
+    ////////////////////
+
+    const myObject = {
+        "validUsername": userInfo.validUsername,
+        "validPassword": userInfo.validPassword,
+        "recoveryMail": userInfo.recoveryMail,
+        "role": userInfo.role,
+        "termsAccepted": getCheckBoxBooleanValue(userInfo.termsAccepted),
+        "conditionsAccepted": getCheckBoxBooleanValue(userInfo.conditionsAccepted),
+        "analyticsAndResearchConsent": getCheckBoxBooleanValue(userInfo.analyticsAndResearchConsent),
+        "organization": userInfo.validOrganization,
+        "iotfedsrole": userInfo.validIotFedsRole
+    };
+   // console.log(myObject);
+    //////////////////
+
+    //{"validUsername":"Test1","validPassword":"Test1$","recoveryMail":"test@email.com","role":"SERVICE_OWNER","termsAccepted":true,
+    //"conditionsAccepted":true,"analyticsAndResearchConsent":true,"organization":"icom","iotfedsrole":"sw"}
 
     formData.append("validUsername", userInfo.validUsername);
     formData.append("validPassword", userInfo.validPassword);
@@ -57,7 +76,7 @@ export function registerUser(userInfo, cb) {
     const config = {
         url: url,
         method: 'post',
-        data: formData,
+        data: myObject,
         headers: headers
     };
 
@@ -307,4 +326,9 @@ export function deleteUser(cb) {
 
 function getCheckBoxValue(value) {
     return value ? "true" : "false";
+}
+
+
+function getCheckBoxBooleanValue(value) {
+    return value ? true : false;
 }

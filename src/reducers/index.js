@@ -30,6 +30,8 @@ import HandleFederationInvitationModalReducer from "./federation/handle-federati
 
 import PendingJoinRequestReducer from "./pending-join-request-reducers/pending-join-request-reducer";
 import FederationJoinModalReducer from "./federation/join-federation-modal-reducer";
+import ChangeFederationRulesModalReducer from "./federation/change-federation-rules-modal-reducer";
+import FederationLeaveWithVoteModalReducer from "./federation/leave-with-vote-federation-modal-reducer"
 
 
 const rootReducer = combineReducers({
@@ -62,7 +64,10 @@ const rootReducer = combineReducers({
     handleFederationInvitationModalReducer: HandleFederationInvitationModalReducer,
     form: formReducer,
     pendingJoinRequests:PendingJoinRequestReducer,
-    federationJoinModal: FederationJoinModalReducer
+    federationJoinModal: FederationJoinModalReducer,
+    changeFederationRulesModal: ChangeFederationRulesModalReducer,
+    federationLeaveWithVoteModal: FederationLeaveWithVoteModalReducer
+
 });
 
 export default rootReducer;
